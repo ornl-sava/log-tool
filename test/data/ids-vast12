@@ -1,0 +1,24 @@
+[**] [1:2100538:17] GPL NETBIOS SMB IPC$ unicode share access [**]
+[Classification: Generic Protocol Command Decode] [Priority: 3] 
+04/05-17:55:00.933206 172.23.1.101:1101 -> 172.23.0.10:139
+TCP TTL:128 TOS:0x0 ID:1643 IpLen:20 DgmLen:122 DF
+***AP*** Seq: 0xCEF93F32  Ack: 0xC40C0BB  Win: 0xFC9C  TcpLen: 20
+
+[**] [1:2100538:17] GPL NETBIOS SMB IPC$ unicode share access [**]
+[Classification: Generic Protocol Command Decode] [Priority: 3] 
+04/05-17:55:00.944053 172.23.1.101:1101 -> 172.23.0.10:139
+TCP TTL:128 TOS:0x0 ID:1649 IpLen:20 DgmLen:122 DF
+***AP*** Seq: 0xCEF942A6  Ack: 0xC40C427  Win: 0xFF13  TcpLen: 20
+
+[**] [1:2103000:7] GPL NETBIOS SMB Session Setup NTMLSSP unicode asn1 overflow attempt [**]
+[Classification: Generic Protocol Command Decode] [Priority: 3] 
+04/05-17:55:00.960174 172.23.1.101:1104 -> 172.23.0.10:139
+TCP TTL:128 TOS:0x0 ID:1663 IpLen:20 DgmLen:1500 DF
+***A**** Seq: 0x54FEF4C7  Ack: 0x9BEB6342  Win: 0xFF36  TcpLen: 20
+[Xref => http://www.microsoft.com/technet/security/bulletin/MS04-007.mspx][Xref => http://cgi.nessus.org/plugins/dump.php3?id=12065][Xref => http://cgi.nessus.org/plugins/dump.php3?id=12052][Xref => http://cve.mitre.org/cgi-bin/cvename.cgi?name=2003-0818][Xref => http://www.securityfocus.com/bid/9635][Xref => http://www.securityfocus.com/bid/9633]
+
+[**] [1:2100538:17] GPL NETBIOS SMB IPC$ unicode share access [**]
+[Classification: Generic Protocol Command Decode] [Priority: 3] 
+04/05-17:55:00.963184 172.23.1.101:1104 -> 172.23.0.10:139
+TCP TTL:128 TOS:0x0 ID:1665 IpLen:20 DgmLen:122 DF
+***AP*** Seq: 0x54FEFF59  Ack: 0x9BEB64C7  Win: 0xFDB1  TcpLen: 20

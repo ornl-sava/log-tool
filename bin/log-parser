@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+var app = require('../lib/log-parser')
+
+app.init()
+app.start()
+
+app.stop()

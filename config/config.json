@@ -1,0 +1,14 @@
+{
+  "environment": "development",
+
+  "development": {
+    "eventQueueServerType"    : "redis",
+    "eventQueueServerAddress" : "127.0.0.1",
+    "eventQueueServerPort"    : 6379,
+    "heartbeatInterval"       : 30
+  },
+
+  "production": {
+    "heartbeatInterval"       : 60
+  }
+}
