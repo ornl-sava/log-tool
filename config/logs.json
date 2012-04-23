@@ -1,0 +1,6 @@
+[
+  {
+    "log" : "test/data/ids-vast12",
+    "parser" : "parser/snort.json"
+  }
+]

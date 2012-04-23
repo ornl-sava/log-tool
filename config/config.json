@@ -2,6 +2,7 @@
   "environment": "development",
 
   "development": {
+    "env"                     : "Development",
     "eventQueueServerType"    : "redis",
     "eventQueueServerAddress" : "127.0.0.1",
     "eventQueueServerPort"    : 6379,
@@ -9,6 +10,7 @@
   },
 
   "production": {
+    "env"                     : "Production",
     "heartbeatInterval"       : 60
   }
 }
