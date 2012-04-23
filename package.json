@@ -8,8 +8,8 @@
     }
   , "contributors": [
       {
-        "name": "John Goodall",
-        "email": "jgoodall@gmail.com"
+        "name": "John Goodall"
+      , "email": "jgoodall@gmail.com"
       }
     ]
   , "dist-tags": { "latest": "0.0.1" }
@@ -20,11 +20,9 @@
     { "0.0.1": "2012-04-18T14:00:00.000Z"
     }
   , "private": true
-  , "main": "server.js"
+  , "main": "./lib/log-parser.js"
   , "dependencies": {
-    , "async": ">0.1"
-    , "forever": ">=0.8.5"
-    , "underscore": ">=1.3"
+      "async": ">0.1"
     , "envy": ">=0.0.1"
     , "redis": ">0.7"
     , "hiredis": ">0.1"

@@ -1,0 +1,32 @@
+# log-tool
+
+`log-tool` will watch log files, optionally convert them to JSON, and send the updates to an event queue.
+
+## Configuration
+
+There is a single JSON configuration file, `config.json`, in `config`. The server reads this file using [node-envy](https://github.com/eliOcs/node-envy). The default is to use the `development` environment, so in production, simply change the `environment` setting at the top of the file:
+
+    "environment": "production"
+
+Configuration options in `development` are inherited by `production`, but you can override them in the `production` block.
+
+## Usage
+
+The only dependency is [node.js](http://nodejs.org/). To run, modify your `config.json` as appropriate and then:
+
+    ./bin/log-tool
+
+## JSON Parsers
+
+You can optionally parse out the log event into JSON before sending to the event queue.
+
+## Event Queue
+
+Currently, [redis](http://redis.io/) is the only option for the event queue. Set the configuration options for your redis instance.
+
+## Cluster
+
+By default, `log-tool` will start up a separate process for each log file.
+
+## Testing
+
