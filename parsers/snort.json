@@ -1,4 +1,5 @@
 {
   "regex": "^\\[\\*\\*\\] \\[([0-9:]+)\\] ([\\S\\s]*) \\[\\*\\*\\]\\s*[\r\n|\r|\n]\\[Classification: ([\\S\\s]*)\\] \\[Priority: (\\d+)\\]\\s*[\r\n|\r|\n]([\\d\\/\\-:\\.]+) ([\\d\\.]+):(\\d+) \\-> ([\\d\\.]+):(\\d+)\\s*[\r\n|\r|\n]([\\s\\S]+)",
-  "labels": ["rule", "ruleText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"]
+  "labels": ["rule", "ruleText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"],
+  "delimiter": "\n\n"
 }

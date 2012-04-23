@@ -2,7 +2,7 @@
 
 `log-tool` will watch log files, optionally convert them to JSON, and send the updates to an event queue.
 
-## Configuration
+## Application Configuration
 
 There is a single JSON configuration file, `config.json`, in `config`. The server reads this file using [node-envy](https://github.com/eliOcs/node-envy). The default is to use the `development` environment, so in production, simply change the `environment` setting at the top of the file:
 
@@ -10,15 +10,35 @@ There is a single JSON configuration file, `config.json`, in `config`. The serve
 
 Configuration options in `development` are inherited by `production`, but you can override them in the `production` block.
 
+## Log Configuration
+
+The log files to process are stored in the log configuration file, `logs.json`, in `config`. The file must contain an array of log definitions, where each log definition is in the format: 
+
+    {
+      "logFilePath" : "path to the log file",
+      "logParser" : "name of the parser to use"
+    }
+
+The parsers are stored in the `parsers` directory. If you do not want to parse the output of a log, set `logParser` to "" or simply do not include it.
+
+## Parsers Configuration
+
+You can optionally parse out the log event into JSON before sending to the event queue. To parse the log file into JSON, create a parser configuration file and put it in the `parsers` directory. The format of the parser file is:
+
+    {
+      "regex" : "JavaScript regular expression",
+      "labels": [label array],
+      "delimiter": "optional event delimiter",
+      "multiline": "true"
+    }
+
+The `regex` string must be a valid JavaScript [Regular Expression](https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions). Each item that you want to extract and label should be in parentheses. The order of the parentheses objects in the expression must match the order of the labels. Note that backslashes must be escaped, so to match one or more digits, use `(\\d+)`, or to match a literal asterisk, use `\\*`. `delimiter` optionally allows setting an event delimiter, which is useful if you have multiple events on a line, or if an event spans multiple lines (default is a newline, `\r`). `multiline` optionally allows setting whether or not a log event is multiple lines, which sets the `^` and `$` in the regular expression to be per line, instead of the entire string (default is false).
+
 ## Usage
 
-The only dependency is [node.js](http://nodejs.org/). To run, modify your `config.json` as appropriate and then:
+The only dependency is [node.js](http://nodejs.org/). To run, modify the configuration files as appropriate and then:
 
     ./bin/log-tool
-
-## JSON Parsers
-
-You can optionally parse out the log event into JSON before sending to the event queue.
 
 ## Event Queue
 
