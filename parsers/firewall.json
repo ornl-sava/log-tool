@@ -1,0 +1,4 @@
+{
+  "regex": "^([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+)",
+  "labels": ["timestamp", "priority", "operation", "messageCode", "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"]
+}

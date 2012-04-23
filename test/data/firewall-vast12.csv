@@ -1,4 +1,3 @@
-Date/time,Syslog priority,Operation,Message code,Protocol,Source IP,Destination IP,Source hostname,Destination hostname,Source port,Destination port,Destination service,Direction,Connections built,Connections torn down
 05/Apr/2012 17:51:26,Info,Teardown,ASA-6-302016,UDP,172.23.0.1,172.23.0.2,(empty),(empty),514,514,syslog,(empty),0,1
 05/Apr/2012 17:51:26,Info,Built,ASA-6-302015,UDP,172.23.0.1,172.23.0.2,(empty),(empty),514,514,syslog,outbound,1,0
 05/Apr/2012 17:53:06,Info,Built,ASA-6-302015,UDP,172.23.0.10,198.32.64.12,(empty),(empty),64048,53,domain,outbound,1,0

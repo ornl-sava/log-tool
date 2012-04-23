@@ -3,4 +3,8 @@
     "logFilePath" : "test/data/ids-vast12",
     "logParser"   : "snort.json"
   }
+, {
+  "logFilePath" : "test/data/firewall-vast12.csv",
+  "logParser"   : "firewall.json"
+  }
 ]
