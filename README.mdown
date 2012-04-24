@@ -1,6 +1,6 @@
 # log-tool
 
-`log-tool` will watch log files, optionally convert them to JSON, and send the updates to an event queue.
+`log-tool` will watch log files, convert them to JSON, and send the updates to an event queue.
 
 ## Application Configuration
 
@@ -23,7 +23,7 @@ The parsers are stored in the `parsers` directory. If you do not want to parse t
 
 ## Parsers Configuration
 
-You can optionally parse out the log event into JSON before sending to the event queue. To parse the log file into JSON, create a parser configuration file and put it in the `parsers` directory. The format of the parser file is:
+Log events are parsed into JSON before sending to the event queue. To parse the log file into JSON, create a parser configuration file and put it in the `parsers` directory. The format of the parser file is:
 
     {
       "regex" : "JavaScript regular expression",
