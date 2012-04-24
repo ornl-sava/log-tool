@@ -52,3 +52,6 @@ By default, `log-tool` will start up a separate process for each log file.
 
 ## Testing
 
+## Development notes
+
+Currently using the `release/1.6.0` branch of [moment.js](http://momentjs.com/) in order to support parsing time strings to millisecond resolution. When this is merged with head and released to npm, this should be updated.
