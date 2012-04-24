@@ -1,5 +1,6 @@
 {
-  "regex": "^\\[\\*\\*\\] \\[([0-9:]+)\\] ([\\S\\s]*) \\[\\*\\*\\]\\s*[\r\n|\r|\n]\\[Classification: ([\\S\\s]*)\\] \\[Priority: (\\d+)\\]\\s*[\r\n|\r|\n]([\\d\\/\\-:\\.]+) ([\\d\\.]+):(\\d+) \\-> ([\\d\\.]+):(\\d+)\\s*[\r\n|\r|\n]([\\s\\S]+)",
-  "labels": ["rule", "ruleText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"],
-  "delimiter": "\n\n"
+  "regex": "^\\[\\*\\*\\] \\[([0-9:]+)\\] ([\\S\\s]*) \\[\\*\\*\\]\\s*[\r\n|\r|\n]\\[Classification: ([\\S\\s]*)\\] \\[Priority: (\\d+)\\]\\s*[\r\n|\r|\n](\\d{2}\\/\\d{2}\\-\\d{2}:\\d{2}:\\d{2}\\.\\d{3})\\d{3} ([\\d\\.]+):(\\d+) \\-> ([\\d\\.]+):(\\d+)\\s*[\r\n|\r|\n]([\\s\\S]+)"
+, "labels": ["rule", "ruleText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"]
+, "delimiter" : "\n\n"
+, "timestamp" : "MM/DD-HH:mm:ss.SSS"
 }
