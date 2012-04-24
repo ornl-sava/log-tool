@@ -21,8 +21,8 @@
     }
   , "private": true
   , "directories" : {
-      lib: "./lib"
-    , bin: "./bin"
+      "lib": "./lib"
+    , "bin": "./bin"
     }
   , "main": "./lib/log-parser.js"
   , "bin": "./bin/log-parser.js"
