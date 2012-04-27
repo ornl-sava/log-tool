@@ -28,6 +28,7 @@
   , "bin": "./bin/log-parser.js"
   , "dependencies": {
       "async": ">0.1"
+    , "moment": ">1.6"
     , "envy": ">=0.0.1"
     , "redis": ">0.7"
     , "hiredis": ">0.1"
