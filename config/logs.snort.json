@@ -1,0 +1,12 @@
+[
+  {
+    "logName"     : "snort"
+  , "logFilePath" : "/Users/ojg/Downloads/VAST-MC2/MC2-RawFirewallandIDSlogs/IDSlog.04062012"
+  , "logParser"   : "snort.json"
+  }
+, {
+    "logName"     : "snort"
+  , "logFilePath" : "/Users/ojg/Downloads/VAST-MC2/MC2-RawFirewallandIDSlogs/IDSlog.04072012"
+  , "logParser"   : "snort.json"
+  }
+]

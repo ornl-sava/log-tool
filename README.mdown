@@ -10,6 +10,11 @@ There is a single JSON configuration file, `config.json`, in `config`. The serve
 
 Configuration options in `development` are inherited by `production`, but you can override them in the `production` block.
 
+There are currently two supported output types, denoted by the `eventQueueServerType`:
+
+  * `redis`: persists the log event in a [hash](http://redis.io/commands#hash) in redis
+  * `redis-pubsub`: sends the log event to the `events` [pubsub](http://redis.io/topics/pubsub) channel
+
 ## Log Configuration
 
 The log files to process are stored in the log configuration file, `logs.json`, in `config`. The file must contain an array of log definitions, where each log definition is in the format: 

@@ -3,7 +3,7 @@
 
   "development": {
     "env"                     : "Development",
-    "eventQueueServerType"    : "redis",
+    "eventQueueServerType"    : "redis-pubsub",
     "eventQueueServerAddress" : "127.0.0.1",
     "eventQueueServerPort"    : 6379,
     "heartbeatInterval"       : 30
