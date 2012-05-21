@@ -1,0 +1,16 @@
+2012-04-05 17:51:26	Local4.Info	172.23.0.1	%ASA-6-302016: Teardown UDP connection 1315632 for inside:172.23.0.2/514 to identity:172.23.0.1/514 duration 0:09:23 bytes 7999
+2012-04-05 17:51:26	Local4.Info	172.23.0.1	%ASA-6-302015: Built outbound UDP connection 1315671 for inside:172.23.0.2/514 (172.23.0.2/514) to identity:172.23.0.1/514 (172.23.0.1/514)
+2012-04-05 17:53:06	Local4.Info	172.23.0.1	%ASA-6-302015: Built outbound UDP connection 1315672 for outside:198.32.64.12/53 (198.32.64.12/53) to inside:172.23.0.10/64048 (10.32.0.1/52130)
+2012-04-05 17:53:10	Local4.Info	172.23.0.1	%ASA-6-302015: Built outbound UDP connection 1315673 for outside:202.12.27.33/53 (202.12.27.33/53) to inside:172.23.0.10/64048 (10.32.0.1/52130)
+2012-04-05 17:53:14	Local4.Info	172.23.0.1	%ASA-6-302015: Built outbound UDP connection 1315674 for outside:128.9.0.107/53 (128.9.0.107/53) to inside:172.23.0.10/64048 (10.32.0.1/52130)
+2012-04-05 17:53:14	Local4.Info	172.23.0.1	%ASA-6-302015: Built outbound UDP connection 1315675 for outside:192.33.4.12/53 (192.33.4.12/53) to inside:172.23.0.10/64048 (10.32.0.1/52130)
+2012-04-05 17:53:26	Local4.Info	172.23.0.1	%ASA-6-302015: Built outbound UDP connection 1315677 for outside:198.41.0.4/53 (198.41.0.4/53) to inside:172.23.0.10/64048 (10.32.0.1/52130)
+2012-04-05 17:53:30	Local4.Info	172.23.0.1	%ASA-6-302015: Built outbound UDP connection 1315678 for outside:192.36.148.17/53 (192.36.148.17/53) to inside:172.23.0.10/64048 (10.32.0.1/52130)
+2012-04-05 17:54:47	Local4.Info	172.23.0.1	%ASA-6-302015: Built outbound UDP connection 1315679 for outside:193.0.14.129/53 (193.0.14.129/53) to inside:172.23.0.10/64048 (10.32.0.1/52130)
+2012-04-05 17:54:59	Local4.Info	172.23.0.1	%ASA-6-302015: Built outbound UDP connection 1315680 for outside:192.203.230.10/53 (192.203.230.10/53) to inside:172.23.0.10/64048 (10.32.0.1/52130)
+2012-04-05 17:55:08	Local4.Info	172.23.0.1	%ASA-6-302016: Teardown UDP connection 1315672 for outside:198.32.64.12/53 to inside:172.23.0.10/64048 duration 0:02:02 bytes 34
+2012-04-05 17:55:32	Local4.Info	172.23.0.1	%ASA-6-302016: Teardown UDP connection 1315678 for outside:192.36.148.17/53 to inside:172.23.0.10/64048 duration 0:02:02 bytes 34
+2012-04-05 17:56:40	Local4.Info	172.23.0.1	%ASA-6-302010: 11 in use, 2563 most used
+2012-04-05 17:56:44	Local4.Info	172.23.0.1	%ASA-6-302016: Teardown UDP connection 1315677 for outside:198.41.0.4/53 to inside:172.23.0.10/64048 duration 0:03:18 bytes 102
+2012-04-05 17:56:48	Local4.Info	172.23.0.1	%ASA-6-302016: Teardown UDP connection 1315679 for outside:193.0.14.129/53 to inside:172.23.0.10/64048 duration 0:02:01 bytes 34
+2012-04-05 17:57:00	Local4.Info	172.23.0.1	%ASA-6-302016: Teardown UDP connection 1315680 for outside:192.203.230.10/53 to inside:172.23.0.10/64048 duration 0:02:01 bytes 34
