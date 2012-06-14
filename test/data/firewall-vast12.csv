@@ -14,3 +14,4 @@
 05/Apr/2012 17:56:44,Info,Teardown,ASA-6-302016,UDP,172.23.0.10,198.41.0.4,(empty),(empty),64048,53,domain,outbound,0,1
 05/Apr/2012 17:56:48,Info,Teardown,ASA-6-302016,UDP,172.23.0.10,193.0.14.129,(empty),(empty),64048,53,domain,outbound,0,1
 05/Apr/2012 17:57:00,Info,Teardown,ASA-6-302016,UDP,172.23.0.10,192.203.230.10,(empty),(empty),64048,53,domain,outbound,0,1
+05/Apr/2012 17:58:00,Info,Teardown,ASA-6-302016,UDP,172.23.0.10,192.203.230.10,(empty),(empty),64048,53,domain,outbound,0,1
