@@ -1,12 +1,9 @@
 var assert = require('chai').assert; //like node's assert, but better.
 var logGenerator = require('./logGenerator');
 
-// require node core modules and dependencies
-//  c&p from vis proj, probably don't need most of this.
 var fs = require('fs')
   , path = require('path')
   , redis = require('redis')
-
 
 /*
 var io = require('socket.io/node_modules/socket.io-client'); //beats having it installed twice ...
@@ -29,7 +26,8 @@ describe("Testing the log reading and redis output",function(){
 });
 
 describe("Testing redis pubsub",function(){
-  // Test 1
+  //TODO real testing.
+
   it('Should connect to redis pubsub',function(done){
     
     var redisClient = redis.createClient()
@@ -43,35 +41,44 @@ describe("Testing redis pubsub",function(){
     })
 
     redisClient.subscribe('events')
+
     done();
   });
 });
 
 describe("Testing the log generator",function(){
 
-  it('Testing that log sizes match - "instant" log version',function(done){
+  it('Log sizes should match - "instant" log version',function(done){
     var sizeDelta = 64; //TODO this is kinda hacky...
-    logGenerator.generate("./test/data/firewall-vast12-instant.csv", "./test/tempData/firewall-vast12-instant.csv");
-    var oldSize = fs.statSync("./test/data/firewall-vast12-instant.csv").size;
-    var newSize = fs.statSync("./test/tempData/firewall-vast12-instant.csv").size;
-    assert.isTrue( (Math.abs(oldSize-newSize) < sizeDelta) );
-    logGenerator.sleep(100, function(){
+    var logFile = "./test/data/firewall-vast12-instant.csv"
+    var logCopy = "./test/tempData/firewall-vast12-instant.csv"
+    if (path.existsSync(logCopy)) {
+      fs.unlinkSync(logCopy); 
+    }
+    logGenerator.generate(logFile, logCopy);
+    logGenerator.sleep(1000, function(){
+      var oldSize = fs.statSync(logFile).size;
+      var newSize = fs.statSync(logCopy).size;
+      assert.isTrue( (Math.abs(oldSize-newSize) < sizeDelta) );
       done();
     });
   });
 
-  it('Testing that log sizes match - "fast" log version',function(done){
+  it('Log sizes should match - "fast" log version',function(done){
     var sizeDelta = 64; //TODO this is kinda hacky...
-    fs.unlinkSync("./test/tempData/firewall-vast12-fast.csv");
-    logGenerator.generate("./test/data/firewall-vast12-fast.csv", "./test/tempData/firewall-vast12-fast.csv");
-    //assert.isFalse( ((oldSize-newSize)<sizeDelta) || ((newSize-oldSize)<sizeDelta) );
+    var logFile = "./test/data/firewall-vast12-fast.csv"
+    var logCopy = "./test/tempData/firewall-vast12-fast.csv"
+    if (path.existsSync(logCopy)) {
+      fs.unlinkSync(logCopy); 
+    }
+    logGenerator.generate(logFile, logCopy);
+    //assert.isFalse( (Math.abs(oldSize-newSize) < sizeDelta) );
     logGenerator.sleep(10000, function(){
-      var oldSize = fs.statSync("./test/data/firewall-vast12-fast.csv").size;
-      var newSize = fs.statSync("./test/tempData/firewall-vast12-fast.csv").size;
-      assert.isTrue( ((oldSize-newSize)<sizeDelta) || ((newSize-oldSize)<sizeDelta) );
+      var oldSize = fs.statSync(logFile).size;
+      var newSize = fs.statSync(logCopy).size;
+      assert.isTrue( (Math.abs(oldSize-newSize) < sizeDelta) );
       done();
     });
   });
-
 
 });

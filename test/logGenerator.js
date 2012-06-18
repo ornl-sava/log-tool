@@ -18,7 +18,22 @@ var lazy = require("lazy")
     @requires
 */
 var eventParser = require('../lib/parser')
-var parsersDir = '../parsers'
+//var parsersDir = '../parsers'
+
+// figure out the working directory
+var dirs = process.cwd().split('/')
+  , workingDir = dirs[dirs.length - 1]
+  , basePath = (workingDir === 'bin' || workingDir === 'test' ? '..' : '.')
+    
+// configuration file (relative to the bin or lib directory)
+var appConfigFile = basePath + '/config/config.json'
+
+// the log file to watch, an array of Objects {log: filename, parser: parseString}
+var logConfigFile = path.normalize(process.env.PWD + '/' + basePath + '/config/logs.json')
+
+// the parsers directory
+var parsersDir = path.normalize(process.env.PWD + '/' + basePath + '/parsers')
+
 
 /*
     The log configuration closure, available functions: add(), get(), length()
@@ -29,35 +44,7 @@ var parsersDir = '../parsers'
       * {Array} labels The labels for matching items in the regular expression
       * {RegExp} delimiter The delimiter for what is defined as an event
 */
-var logConfig = function () {
-  var logs = []
-  return {
-    // add a configuration and return the index
-    add: function (cfg) {
-      var parserConfig = require(parsersDir + '/' + cfg.logParser)
-        , parser = new RegExp(parserConfig.regex, (parserConfig.multiline ? 'm' : ''))
-        , labels = parserConfig.labels
-        , delimiter = new RegExp((parserConfig.delimiter ? parserConfig.delimiter : '\n'))
-        , timeParser = (parserConfig.timestamp ? parserConfig.timestamp : '')
-      return logs.push({'name': cfg.logName, 'file': cfg.logFilePath, 'parser': parser, 'labels': labels, 'delimiter': delimiter, 'timeParser': timeParser})
-    }
-    // get the log configuration for a given index
-  , get: function (index) {
-      return logs[index]
-    }
-    // get the number of log configurations that are stored here
-  , length: function () {
-      return logs.length
-    }
-  }
-}()
-
-//kinda hacky, but apperantly this is the best node can do?
-//TODO I find that hard to believe ... look into this further
-function sleepSyn(milliSeconds) {
-  var startTime = new Date().getTime();
-  while (new Date().getTime() < startTime + milliSeconds);
-}
+var logConfig = require('../lib/index').logConfig
 
 function sleep(milliSeconds, cb) {
   setTimeout(cb, milliSeconds);
@@ -65,7 +52,6 @@ function sleep(milliSeconds, cb) {
 
 //copy the log (not in relative time)
 var copy = function (inFileName, outFileName) { 
-  //var logInStream = fs.createReadStream(inFileName)
   var o = fs.createWriteStream(outFileName);
   var i = rl.createInterface(fs.createReadStream(inFileName), o, null);
   i.on('line', function (line) {
@@ -73,20 +59,19 @@ var copy = function (inFileName, outFileName) {
     //console.log('Read: '+line);
   });
   i.on('close', function() {
-    console.log('Done!');
-    //process.stdin.destroy();
-    //process.exit(0);
+    console.log('Done with log copy!');
   });
 }
 
 var generate = function (inFileName, outFileName) {
   // load configuration for log files
   //console.info('Loading log file configuration')
-  var logConfigFile = '../config/logs.json'
+  //var logConfigFile = '../config/logs.json'
+  //var logConfigFile = path.normalize(process.env.PWD + '/' + basePath + '/config/logs.json')
   var logs = require(logConfigFile)
   for (var i = 0; i < logs.length; i++)
     logConfig.add(logs[i])
-  var logIndex = 1
+  var logIndex = 1 //TODO obv. this will only work with one log type (firewall) for now.
   var parser = logConfig.get(logIndex).parser;
   var labels = logConfig.get(logIndex).labels;
   var timeParser = logConfig.get(logIndex).timeParser;
@@ -124,41 +109,12 @@ var generate = function (inFileName, outFileName) {
           });
         }
       );
-/*
-      //var logInStream = fs.createReadStream(inFileName)
-      var o = fs.createWriteStream(outFileName);
-      var i = rl.createInterface(fs.createReadStream(inFileName), o, null);
-      i.on('line', function (line) {
-        //TODO parse timestamp, wait before writing.
-        try{
-          result = eventParser.parseSync(line, parser, labels, timeParser);
-        }catch(err){
-          console.error('Log error for ' + name + '\n' + err)
-        }
-        // check for non-null results and send those
-        //console.log( JSON.stringify(result) )
-        //sleep(lastTime - result.timestamp);
-        console.log('started at: ' + firstTime + ' sleeping for: ' + (firstTime - result.timestamp) );
-        sleep(firstTime - result.timestamp, function(){
-          //firstTime = result.timestamp;
-          o.write(line, 'utf8');
-          console.log('Read: '+line);
-        });
-      });
-      i.on('close', function() {
-        console.log('Done!');
-        //process.stdin.destroy();
-        //process.exit(0);
-      });
-*/
-
     }
   })
 }
 
 
 module.exports.generate = generate;
-module.exports.sleepSyn = sleepSyn;
 module.exports.sleep = sleep;
 
 //for testing
