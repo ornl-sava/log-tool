@@ -102,15 +102,25 @@ var generate = function (inFileName, outFileName) {
             console.error('Log error for ' + name + '\n' + err)
           }
           //console.log('started at: ' + firstTime + ' sleeping for: ' + (result.timestamp - firstTime) );
-          sleep(result.timestamp - firstTime, function(){
-            //firstTime = result.timestamp;
-            o.write(line, 'utf8');
-            //console.log('Read: '+line);
-          });
+          writeLineDelay(line, result.timestamp - firstTime, o);
         }
       );
     }
   })
+}
+
+function writeLineDelay(line, delay, ws){
+  sleep(delay, function(){
+    //firstTime = result.timestamp;
+    var status = ws.write(line + '\n', 'utf8');
+    /*
+    if( status === false)
+      console.warn('Warning: line could not be written normally: ' + line);
+    else
+      console.debug('Line written ok!');
+    //console.log('Read: '+line);
+    */
+  });
 }
 
 
@@ -118,4 +128,4 @@ module.exports.generate = generate;
 module.exports.sleep = sleep;
 
 //for testing
-generate("./data/firewall-vast12-fast.csv", "./tempData/firewall-vast12-fast.csv");
+generate("./data/firewall-vast12-2h.csv", "./tempData/firewall-vast12-2h.csv");

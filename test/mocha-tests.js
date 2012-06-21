@@ -52,8 +52,8 @@ describe("Testing redis pubsub",function(){
     
     logGenerator.sleep(5000, function(){ // 'instant' + extra for IO
       console.log("message count was " + msgCount );
-      //assert.equal( msgCount, 26 ); //17 fw (short), 7 ids, + 2?? //TODO: what?
-      assert.equal( msgCount, 1339 ); //652 fw (1m), 7 ids, + 2?? //TODO: what?
+      assert.equal( msgCount, 26 ); //17 fw (short), 7 ids, + 2?? //TODO: what?
+      //assert.equal( msgCount, 1339 ); //652 fw (1m), 7 ids, + 2?? //TODO: what?
       done();
     });
 
