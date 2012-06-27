@@ -1,0 +1,27 @@
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+# Node files #
+##############
+npm-debug.log
+testing
+logs
+pids
+nohup.out
+*.log
+*.pid
+lib-cov
+.bin
+# Ignore testing modules
+node_modules/mocha
+node_modules/should
+node_modules/chai
+# Ignore native node_modules
+.lock-wscript
+*.out
+build/
+node_modules/hiredis/deps/hiredis/*.o
+node_modules/hiredis/deps/hiredis/
