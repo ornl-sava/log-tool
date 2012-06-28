@@ -92,22 +92,42 @@ var generate = function (inFileName, outFileName) {
       logStream.destroy(); //have all we need from this stream, will open a fresh one now.
 
       var o = fs.createWriteStream(outFileName);
-      new lazy(fs.createReadStream(inFileName))
-        .lines
-        .forEach(function(line){
-          //console.log("OMG " + line.toString());
-          try{
-            result = eventParser.parseSync(line, parser, labels, timeParser);
-          }catch(err){
-            console.error('Log error for ' + name + '\n' + err)
-          }
-          //console.log('started at: ' + firstTime + ' sleeping for: ' + (result.timestamp - firstTime) );
-          writeLineDelay(line, result.timestamp - firstTime, o);
+      /* incomplete / not working - read in chunks, wait for few ms in between.
+      var buf = new Buffer(10000);
+      fs.open(inFileName, 'r', function(err,fd){
+        if(err) {
+          console.error("File could not be opened: %s", err);
         }
-      );
+        fs.read(fd, buf, null, 10000, function(err, bytesRead, buffer){
+          //writeLineDelay(line, result.timestamp - firstTime, o);
+          console.log(buffer.toString('utf8'));
+        });
+      });//end fs.open
+      */
+      // read the entire file before moving on.
+      fs.readFile(inFileName, 'utf8', function (err, data) {
+        if (err) throw err;
+        console.log('File read completed, scheduling writes...');
+        var lines = data.split(delimiter)
+        var line
+        for(var i=0; i< lines.length; i++){
+          line = lines[i];
+          if(line != ''){
+            try{
+              result = eventParser.parseSync(line, parser, labels, timeParser);
+            }catch(err){
+              console.error('Log error for ' + name + '\n' + err)
+            }
+            //console.log('started at: ' + firstTime + ' sleeping for: ' + (result.timestamp - firstTime) );
+            writeLineDelay(line, result.timestamp - firstTime, o);
+          }
+        }
+      });
     }
   })
 }
+
+
 
 function writeLineDelay(line, delay, ws){
   sleep(delay, function(){
@@ -128,4 +148,4 @@ module.exports.generate = generate;
 module.exports.sleep = sleep;
 
 //for testing
-generate("./data/firewall-vast12-2h.csv", "./tempData/firewall-vast12-2h.csv");
+generate("./data/firewall-vast12-full.csv", "./tempData/firewall-vast12-full.csv");
