@@ -34,7 +34,6 @@ var logConfigFile = path.normalize(process.env.PWD + '/' + basePath + '/config/l
 // the parsers directory
 var parsersDir = path.normalize(process.env.PWD + '/' + basePath + '/parsers')
 
-
 /*
     The log configuration closure, available functions: add(), get(), length()
     Each entry stores: 
@@ -63,15 +62,20 @@ var copy = function (inFileName, outFileName) {
   });
 }
 
-var generate = function (inFileName, outFileName) {
+//logIndex is the index of the needed entry in the logs.json file.
+//currently, ids = 0, firewall = 1, but is subject to change.
+//speedup is a mult., eg. 2 is double-speed, etc.
+var generate = function (inFileName, outFileName, logIndex, speedup) {
   // load configuration for log files
   //console.info('Loading log file configuration')
   //var logConfigFile = '../config/logs.json'
   //var logConfigFile = path.normalize(process.env.PWD + '/' + basePath + '/config/logs.json')
+  if(!speedup || speedup == 0)
+    speedup = 1; //do this so default makes sense.
   var logs = require(logConfigFile)
   for (var i = 0; i < logs.length; i++)
     logConfig.add(logs[i])
-  var logIndex = 1 //TODO obv. this will only work with one log type (firewall) for now.
+  //var logIndex = 1 //TODO obv. this will only work with one log type (firewall) for now.
   var parser = logConfig.get(logIndex).parser;
   var labels = logConfig.get(logIndex).labels;
   var timeParser = logConfig.get(logIndex).timeParser;
@@ -87,7 +91,11 @@ var generate = function (inFileName, outFileName) {
     buffer += chunk
     if (buffer.match(delimiter)) {
       var lines = buffer.split(delimiter)
-      var result = eventParser.parseSync(lines[0], parser, labels, timeParser);
+      try{
+        var result = eventParser.parseSync(lines[0], parser, labels, timeParser);
+      }catch (err){
+        console.error('error ' + err + '\nwith line ' + lines[0])
+      }
       var firstTime = result.timestamp;
       logStream.destroy(); //have all we need from this stream, will open a fresh one now.
 
@@ -116,18 +124,16 @@ var generate = function (inFileName, outFileName) {
             try{
               result = eventParser.parseSync(line, parser, labels, timeParser);
             }catch(err){
-              console.error('Log error for ' + name + '\n' + err)
+              console.error('error ' + err + '\nwith line ' + lines[0])
             }
             //console.log('started at: ' + firstTime + ' sleeping for: ' + (result.timestamp - firstTime) );
-            writeLineDelay(line, result.timestamp - firstTime, o);
+            writeLineDelay(line, (result.timestamp - firstTime)/speedup, o);
           }
         }
       });
     }
   })
 }
-
-
 
 function writeLineDelay(line, delay, ws){
   sleep(delay, function(){
@@ -143,9 +149,10 @@ function writeLineDelay(line, delay, ws){
   });
 }
 
-
 module.exports.generate = generate;
 module.exports.sleep = sleep;
 
 //for testing
-generate("./data/firewall-vast12-full.csv", "./tempData/firewall-vast12-full.csv");
+//generate("./data/firewall-vast12-2h.csv", "./tempData/firewall-vast12-2h.csv", 1);
+generate("./data/ids-vast12-full", "./tempData/ids-vast12-full", 0, 10);
+//generate("./data/ids-vast12", "./tempData/ids-vast12", 0, 10);

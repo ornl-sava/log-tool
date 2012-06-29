@@ -1,6 +1,6 @@
 [
   {
-    "logName"     : "snort"
+    "logName"     : "firewall"
   , "logFilePath" : "/Users/ojg/Downloads/VAST-MC2/MC2-RawFirewallandIDSlogs/Firewall-part1.txt"
   , "logParser"   : "firewall.json"
   }
