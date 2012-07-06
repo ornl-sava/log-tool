@@ -158,6 +158,6 @@ module.exports.generate = generate;
 module.exports.sleep = sleep;
 
 //for testing
-generate("./data/firewall-vast12-2h.csv", "./tempData/firewall-vast12-2h.csv", 1, 10);
+generate("./data/firewall-vast12-2h.csv", "./tempData/firewall-vast12-2h.csv", 1, 1);
 //generate("./data/ids-vast12-full", "./tempData/ids-vast12-full", 0, 10);
 //generate("./data/ids-vast12", "./tempData/ids-vast12", 0, 10);
