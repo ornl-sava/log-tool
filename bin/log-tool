@@ -1,8 +1,17 @@
-#!/usr/bin/env node
+#!/bin/bash
 
-var app = require('../lib/')
+PWD="`pwd`"
+WDir=`basename $PWD`
+#echo $WDir
 
-app.init()
-app.start()
+# Script must be run from the project root directory or the ./bin directory
+if [ $WDir = "bin" ]
+then
+  cd ..
+elif [ $WDir != "su-log-tool" ]
+then
+  echo "Unknown directory"
+fi
 
-app.stop()
+#just going to assume some common/useful/sane default arguments.
+node logtool.js
