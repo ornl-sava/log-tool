@@ -13,6 +13,9 @@ var _ = require('lodash')
 
 var lazy = require("lazy")
 
+//TODO make option in config?
+var addLineNumber = true
+
 /*  
     Import event parser module
     @requires
@@ -121,6 +124,8 @@ var generate = function (inFileName, outFileName, logIndex, speedup) {
         for(var i=0; i< lines.length; i++){
           line = lines[i];
           if(line != ''){
+            if(addLineNumber)
+              line = "Line Number: " + (i+1) + "," + line
             try{
               result = eventParser.parseSync(line, parser, labels, timeParser);
             }catch(err){
@@ -153,6 +158,6 @@ module.exports.generate = generate;
 module.exports.sleep = sleep;
 
 //for testing
-//generate("./data/firewall-vast12-2h.csv", "./tempData/firewall-vast12-2h.csv", 1);
-generate("./data/ids-vast12-full", "./tempData/ids-vast12-full", 0, 10);
+generate("./data/firewall-vast12-2h.csv", "./tempData/firewall-vast12-2h.csv", 1, 10);
+//generate("./data/ids-vast12-full", "./tempData/ids-vast12-full", 0, 10);
 //generate("./data/ids-vast12", "./tempData/ids-vast12", 0, 10);
