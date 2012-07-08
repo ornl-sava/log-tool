@@ -11,9 +11,15 @@ var path = require('path')
 */
 var _ = require('lodash')
 
-var lazy = require("lazy")
+var lazy = require("lazy") //TODO is this still in use?
 
-//TODO make option in config?
+// Import opts command line options parser module
+//  https://bitbucket.org/mazzarelli/js-opts/wiki/Home
+var opts = require('opts');
+
+var common = require('../lib/common.js');
+
+//TODO make option in config or opts?
 var addLineNumber = true
 
 /*  
@@ -53,7 +59,8 @@ function sleep(milliSeconds, cb) {
 }
 
 //copy the log (not in relative time)
-var copy = function (inFileName, outFileName) { 
+//NB: if there are several lines with same timestamp, this will preserve line order, while generate() will not.
+var copy = function (inFileName, outFileName, logIndex, startTime, startLine) { 
   var o = fs.createWriteStream(outFileName);
   var i = rl.createInterface(fs.createReadStream(inFileName), o, null);
   i.on('line', function (line) {
@@ -68,7 +75,8 @@ var copy = function (inFileName, outFileName) {
 //logIndex is the index of the needed entry in the logs.json file.
 //currently, ids = 0, firewall = 1, but is subject to change.
 //speedup is a mult., eg. 2 is double-speed, etc.
-var generate = function (inFileName, outFileName, logIndex, speedup) {
+var generate = function (inFileName, outFileName, logIndex, speedup, startTime, startLine) {
+  //console.log('Invoking generate with: ' + inFileName + ' ' + outFileName + ' ' + logIndex + ' ' + speedup + ' ' + startTime + ' ' + startLine);
   // load configuration for log files
   //console.info('Loading log file configuration')
   //var logConfigFile = '../config/logs.json'
@@ -100,6 +108,11 @@ var generate = function (inFileName, outFileName, logIndex, speedup) {
         console.error('error ' + err + '\nwith line ' + lines[0])
       }
       var firstTime = result.timestamp;
+      //console.log('first line timestamp is: ' + firstTime );
+      if( firstTime < startTime){
+        //console.log('first line timestamp was: ' + firstTime + ' but now using startTime of: ' + startTime );
+        firstTime = startTime;
+      }
       logStream.destroy(); //have all we need from this stream, will open a fresh one now.
 
       var o = fs.createWriteStream(outFileName);
@@ -124,15 +137,18 @@ var generate = function (inFileName, outFileName, logIndex, speedup) {
         for(var i=0; i< lines.length; i++){
           line = lines[i];
           if(line != ''){
-            if(addLineNumber)
-              line = "Line Number: " + (i+1) + "," + line
-            try{
-              result = eventParser.parseSync(line, parser, labels, timeParser);
-            }catch(err){
-              console.error('error ' + err + '\nwith line ' + lines[0])
+            if( (i+1) >= startLine ){
+              if(addLineNumber)
+                line = "Line Number: " + (i+1) + "," + line
+              try{
+                result = eventParser.parseSync(line, parser, labels, timeParser);
+              }catch(err){
+                console.error('error ' + err + '\nwith line ' + lines[0])
+              }
+              //console.log('started at: ' + firstTime + ' sleeping for: ' + (result.timestamp - firstTime) );
+              if(result.timestamp >= firstTime)
+                writeLineDelay(line, (result.timestamp - firstTime)/speedup, o);
             }
-            //console.log('started at: ' + firstTime + ' sleeping for: ' + (result.timestamp - firstTime) );
-            writeLineDelay(line, (result.timestamp - firstTime)/speedup, o);
           }
         }
       });
@@ -157,7 +173,153 @@ function writeLineDelay(line, delay, ws){
 module.exports.generate = generate;
 module.exports.sleep = sleep;
 
-//for testing
-generate("./data/firewall-vast12-2h.csv", "./tempData/firewall-vast12-2h.csv", 1, 1);
+//for testing.  old.
+//generate("./data/firewall-vast12-2h.csv", "./tempData/firewall-vast12-2h.csv", 1, 1);
 //generate("./data/ids-vast12-full", "./tempData/ids-vast12-full", 0, 10);
 //generate("./data/ids-vast12", "./tempData/ids-vast12", 0, 10);
+
+//now with more usefulness!
+// CONSTANTS and defaults
+var APP_VERSION = '0.0.1';
+var DEFAULT_DEBUG = false;
+var DEFAULT_IN_FILE = "./data/firewall-vast12-1m.csv"
+var DEFAULT_OUT_FILE = "./tempData/firewall-vast12-1m.csv"
+var DEFAULT_INDEX = 1; //position in logs.json list
+var DEFAULT_SPEED = 1;
+var DEFAULT_START_TIME = 0;
+var DEFAULT_START_LINE = 0;
+var DEFAULT_INSTANT = false;
+
+//TODO descriptions should not exceed 80 cols, or should have \n's added in logical places.
+var options = [
+  { short       : 'v'
+  , long        : 'version'
+  , description : 'Show version and exit'
+  , callback    : function () { console.log(APP_VERSION); process.exit(1); }
+  },
+  { short       : 'd'
+  , long        : 'debug'
+  , description : 'Show debugging info  (default:  ' + (DEFAULT_DEBUG ? 'true' : 'false') + ')'
+  , callback    : function (value) { common.logger.info('Set debug to ' + value); }
+  },
+  { short       : 'i'
+  , long        : 'inFile'
+  , description : 'Set location of input file (default:  ' + DEFAULT_IN_FILE + ')'
+  , value       : true
+  , callback    : function (value) {
+        if ( path.existsSync(value) ) {
+            common.logger.info('Using ' + value + ' for input file.');
+        }
+        else {
+            common.logger.error('Input file ' + value + ' does not exist.');
+            process.exit(1);
+        }
+    }
+  },
+  { short       : 'o'
+  , long        : 'outFile'
+  , description : 'Set location of output file (default:  ' + DEFAULT_OUT_FILE + ')'
+  , value       : true
+  , callback    : function (value) {
+        if ( path.existsSync(value) ) {
+            common.logger.info('Using ' + value + ' for output file.');
+        }
+        else {
+            common.logger.error('Output file ' + value + ' does not exist.');
+            process.exit(1);
+        }
+    }
+  },
+
+  { short       : 'p'
+  , long        : 'logIndex'
+  , description : 'Set the log index.  It must match the appropriate entry in the log config file. (default:  ' + DEFAULT_INDEX + ')'
+  , value       : true
+  , callback    : function (value) {
+        if ( value >= 0 && value <= 1 ) { //TODO read index range from logs.json file
+            common.logger.info('Using logIndex of ' + value);
+        }
+        else {
+            common.logger.error('Invalid range for logIndex: ' + value);
+            process.exit(1);
+        }
+    }
+  },
+  { short       : 's'
+  , long        : 'speed'
+  , description : 'Set speed ratio for generating the log file (default:  ' + DEFAULT_SPEED + 
+                    ') Higher values are faster: 2 is double speed, 0.5 is half speed, etc.'
+  , value       : true
+  , callback    : function (value) {
+        if ( value !== 0 ) {
+            common.logger.info('Using speed of ' + value);
+        }
+        else {
+            common.logger.error('Invalid value for speed: ' + value);
+            process.exit(1);
+        }
+    }
+  },
+  { short       : 't'
+  , long        : 'startTime'
+  , description : 'Start time (epoch time in ms.)  This will ignore all log entries before this time. (default:  ' + DEFAULT_START_TIME + ')'
+  , value       : true
+  , callback    : function (value) {
+        if ( value > 0 ) { //TODO some better checking against timestamps in log, after prog is invoked
+            common.logger.info('Using startTime of ' + value);
+        }
+        else {
+            common.logger.error('Invalid value for startTime: ' + value);
+            process.exit(1);
+        }
+    }
+  },
+  { short       : 'l'
+  , long        : 'startLine'
+  , description : 'Start line.  This will ignore all log entries before this line. (default:  ' + DEFAULT_START_LINE + ')'
+  , value       : true
+  , callback    : function (value) {
+        if ( value > 0 ) { //TODO some better checking against num lines in log, after prog is invoked
+            common.logger.info('Using startLine of ' + value);
+        }
+        else {
+            common.logger.error('Invalid value for startLine: ' + value);
+            process.exit(1);
+        }
+    }
+  },
+  { short       : 'I'
+  , long        : 'instant'
+  , description : 'Output file instantly, instead of in relative time  (Default:  ' + DEFAULT_INSTANT + ')'
+  , value       : true
+  , callback    : function (value) {
+        if ( value === false ) { 
+            common.logger.info('Processing log file in relative time');
+        }
+        else {
+            common.logger.info('Processing log file in fastest possible time');
+        }
+    }
+  }
+];
+
+//TODO should be able to specify logs.json file location (once it is configurable in logtool.js)
+//TODO mode to read from logs.json & guess what's needed??
+
+opts.parse(options, true);
+
+// these will be set by command line arguments
+var debug     = opts.get('debug')     || DEFAULT_DEBUG;
+var inFile    = opts.get('inFile')    || DEFAULT_IN_FILE;
+var outFile   = opts.get('outFile')   || DEFAULT_OUT_FILE;
+var logIndex  = opts.get('logIndex')  || DEFAULT_INDEX;
+var speed     = opts.get('speed')     || DEFAULT_SPEED;
+var startTime = opts.get('startTime') || DEFAULT_START_TIME; //TODO does nothing.
+var startLine = opts.get('startLine') || DEFAULT_START_LINE; //TODO does nothing.
+var instant   = opts.get('instant')   || DEFAULT_INSTANT; //TODO mode not supported.
+
+if( !instant )
+  generate(inFile, outFile, logIndex, speed, startTime, startLine);
+else
+  copy(inFile, outFile, logIndex, startTime, startLine);
+
