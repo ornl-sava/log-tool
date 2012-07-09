@@ -2,6 +2,9 @@
 
 import json
 import os
+import time
+import numpy as np
+from matplotlib import dates
 
 # various settings.
 debug = False
@@ -14,17 +17,18 @@ fwEndLine = 1000000000
 idsStartLine = 0
 idsEndLine = 1000000000
 
-#timestamps in epoch time (ms)
-startTime = 1333664716000
-endTime   = 1333664718000
+#timestamps in epoch time (s)
+startTime = 1333721700
+endTime   = 1333722420
 
 inFilesDir = "../test/data/scores/"
-inFiles = ['out-split.aa', 'out-split.ab', 'out-split.ac', 'out-split.ad',
-           'out-split.ae', 'out-split.af', 'out-split.ag', 'out-split.ah',
-           'out-split.ai', 'out-split.aj', 'out-split.ak', 'out-split.al',
+inFiles = [#'out-split.aa', 'out-split.ab', 'out-split.ac', 'out-split.ad',
+           #'out-split.ae', 'out-split.af', 'out-split.ag', 'out-split.ah',
+           #'out-split.ai', 'out-split.aj', 'out-split.ak', 'out-split.al',
            'out-split.am', 'out-split.an', 'out-split.ao', 'out-split.ap',
-           'out-split.aq',  'out-split2.ar', 'out-split2.as', 'out-split2.at',
-           'out-split2.au', 'out-split2.av', 'out-split2.aw', 'out-split2.ax',]
+           #'out-split.aq',  'out-split2.aa', 'out-split2.ab', 'out-split2.ac',
+           #'out-split2.ad', 'out-split2.ae', 'out-split2.af', 'out-split2.ag',
+          ]
 
 # the actual stuff happens here.
 
@@ -42,7 +46,7 @@ for fileName in inFiles:
     #if debug:
     #  print line
     obj = json.loads(line.replace("'", '"'))
-    currTime = ( (obj['time'] - 719163.0)*24*60*60 + 4*60*60 ) * 1000 #converts to epoch time.
+    currTime = dates.num2epoch( obj['time'] )
     if currTime > startTime and currTime < endTime:
       if (obj['id'][0:2] == 'fw' and keepFW):
         if int(obj['id'][3:]) > fwStartLine and int(obj['id'][3:]) < fwEndLine: #TODO str/int conversion?
