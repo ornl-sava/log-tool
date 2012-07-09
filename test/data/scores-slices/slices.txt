@@ -1,7 +1,17 @@
-Description of each slice.
+Description of each slice.  Start times are for the first item in the slice.
 
 1. Look for a drastic increase in  'empty' 'empty' traffic  17:45:00—17:45:59 ( 4 clusters of around 12 lines each) . Aug 6th logon to firewall, configurations changes, addresses added.  At 17:58 DNS hits a non DNS for the first time ( role violation, anamoly, highvalue) 
+  Starts at 1333734120.0
+
 2. Look for a drastic increase in empty empty traffic 18:22:00-18:23:00. Aug 5th.  ( placing 172.28.x.x on network) 
+  Starts at 1333649880.0
+
 3. 17:41-18:06 on aug 6th. one source ip 172.23.0.108 communicates , all other are quiet. ( related to 1.) (slice is superset of 1)
+  Starts at 1333733820.0
+
 4. 18:23- normal traffic resumes Aug 6th ( see 1 ,3,4)
+  Starts at 1333736160.0
+
 5. 14:22 significant drop is traffic ( erik)
+  Starts at 1333721760.0
+
