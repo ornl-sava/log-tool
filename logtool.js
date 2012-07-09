@@ -8,6 +8,7 @@ var app = require('./lib/')
 var APP_VERSION = '0.0.1';
 var DEFAULT_DEBUG = false;
 var DEFAULT_LOG_CONFIG = './config/logs.json';
+var DEFAULT_INPUT_FILE_DIR = './test/data';
 var DEFAULT_ENV = "Development";
 var DEFAULT_CSV_OPTS = {trim: true, columns: true};
 var DEFAULT_DB_TYPE = "redis-pubsub";
