@@ -182,8 +182,8 @@ module.exports.sleep = sleep;
 // CONSTANTS and defaults
 var APP_VERSION = '0.0.1';
 var DEFAULT_DEBUG = false;
-var DEFAULT_IN_FILE = "./data/firewall-vast12-1h.csv"
-var DEFAULT_OUT_FILE = "./tempData/firewall-vast12-1h.csv"
+var DEFAULT_IN_FILE = "./data/firewall-vast12-attack1.csv"
+var DEFAULT_OUT_FILE = "./tempData/firewall-vast12-full.csv"
 var DEFAULT_INDEX = 1; //position in logs.json list
 var DEFAULT_SPEED = 1;
 var DEFAULT_START_TIME = 0;
@@ -314,8 +314,8 @@ var inFile    = opts.get('inFile')    || DEFAULT_IN_FILE;
 var outFile   = opts.get('outFile')   || DEFAULT_OUT_FILE;
 var logIndex  = opts.get('logIndex')  || DEFAULT_INDEX;
 var speed     = opts.get('speed')     || DEFAULT_SPEED;
-var startTime = opts.get('startTime') || DEFAULT_START_TIME; //TODO does nothing.
-var startLine = opts.get('startLine') || DEFAULT_START_LINE; //TODO does nothing.
+var startTime = opts.get('startTime') || DEFAULT_START_TIME; 
+var startLine = opts.get('startLine') || DEFAULT_START_LINE; 
 var instant   = opts.get('instant')   || DEFAULT_INSTANT; //TODO mode not supported.
 
 if( !instant )
