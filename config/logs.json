@@ -6,7 +6,7 @@
   }
 , {
     "logName"     : "firewall"
-  , "logFilePath" : "test/tempData/firewall-slice2.csv"
+  , "logFilePath" : "test/tempData/firewall-slice1.csv"
   , "logParser"   : "firewall.json"
   }
 ]
