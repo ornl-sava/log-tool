@@ -1,1 +1,1 @@
-echo "" > test/tempData/firewall-slice2.csv
+echo "" > test/tempData/firewall-slice.csv

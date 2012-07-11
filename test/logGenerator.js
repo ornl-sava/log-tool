@@ -182,7 +182,7 @@ module.exports.sleep = sleep;
 // CONSTANTS and defaults
 var APP_VERSION = '0.0.1';
 var DEFAULT_DEBUG = false;
-var DEFAULT_IN_FILE = "./data/firewall-slice3.csv"
+var DEFAULT_IN_FILE = "./data/firewall-slice4.csv"
 var DEFAULT_OUT_FILE = "./tempData/firewall-slice.csv"
 var DEFAULT_INDEX = 1; //position in logs.json list
 var DEFAULT_SPEED = 1;
