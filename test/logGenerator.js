@@ -138,6 +138,8 @@ var generate = function (inFileName, outFileName, logIndex, speedup, startTime, 
           line = lines[i];
           if(line != ''){
             if( (i+1) >= startLine ){
+              if( (i+1) === startLine )
+                firstTime = line.timestamp;
               if(addLineNumber)
                 line = "Line Number: " + (i+1) + "," + line
               try{
