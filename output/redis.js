@@ -1,3 +1,11 @@
+/*  
+    Import [redis](http://redis.io/) module
+    @see https://github.com/mranney/node_redis
+    @requires
+*/
+var redis = require('redis')
+  , redisClient
+
 /*
   Send data to redis to persist in the database
   Data sent to redis:

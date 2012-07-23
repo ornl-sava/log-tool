@@ -1,3 +1,11 @@
+/*  
+    Import [redis](http://redis.io/) module
+    @see https://github.com/mranney/node_redis
+    @requires
+*/
+var redis = require('redis')
+  , redisClient
+
 
 /*
   Publish data to redis using publish / subscribe

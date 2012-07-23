@@ -1,5 +1,5 @@
 //not needed
-//exports.start = function(opts){}
+exports.start = function(opts){}
 
 exports.data = function(data){
   this.emit('data', data)
