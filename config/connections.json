@@ -1,0 +1,7 @@
+[
+  {
+    "input":"in.txt",
+    "parser":"null",
+    "outputs":["out.txt"]
+  }
+]
