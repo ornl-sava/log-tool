@@ -1,0 +1,19 @@
+{
+  "null":{
+    "parser":"null"
+  },
+  "firewall":{
+    "parser":"regex"
+  , "regex": "^(Line Number: \\d+){0,1},{0,1}([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+)"
+  , "labels": ["lineNumber", "timestamp", "priority", "operation", "messageCode", "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"]
+  , "timestamp": "DD/MMM/YYYY HH:mm:ss"
+  , "delimiter": "\r\n|\n"
+  },
+  "snort":{
+    "parser":"regex"
+  , "regex": "^(Line Number: \\d+){0,1},{0,1}\\[\\*\\*\\] \\[([0-9:]+)\\] ([\\S\\s]*) \\[\\*\\*\\]\\s*[\r\n|\r|\n](\\[Classification: ){0,1}([\\S\\s]*){0,1}?\\]{0,1} {0,1}\\[Priority: (\\d+)\\]\\s*[\r\n|\r|\n](\\d{2}\\/\\d{2}\\-\\d{2}:\\d{2}:\\d{2}\\.\\d{3})\\d{3} ([\\d\\.]+):{0,1}(\\d+){0,1} \\-> ([\\d\\.]+):{0,1}(\\d+){0,1}\\s*[\r\n|\r|\n]([\\s\\S]+)"
+  , "labels": ["lineNumber", "rule", "ruleText", "junkText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"]
+  , "delimiter" : "\r\n\r\n|\n\n"
+  , "timestamp" : "MM/DD-HH:mm:ss.SSS"
+  }
+}

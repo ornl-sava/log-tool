@@ -29,6 +29,23 @@ The log files to process are stored in the log configuration file, `logs.json`, 
 
 ## Parsers Configuration
 
+logtool.js - entry point.  Can either display/modify the configuration information, or launch the main logtool process.
+
+input - input modules
+
+output - output modules
+
+parsers - parser modules
+
+config - configuration files.  Both global configuration info and configuration for modules and named sources and destinations.
+
+lib - all core libraries for logtool (ie. everything except modules described above)
+
+
+
+
+# Old documentation, TODO merge me!
+
 Log events are parsed into JSON before sending to the event queue. To parse the log file into JSON, create a parser configuration file and put it in the `parsers` directory. The format of the parser file is:
 
     {

@@ -1,0 +1,22 @@
+{
+  "console":{
+    "module":"console"
+  },
+  "out.txt":{
+    "module":"file",
+    "fileName":"out.txt"
+  },
+  "pubsub": {
+    "output"        : "redis-pubsub",
+    "serverAddress" : "127.0.0.1",
+    "serverPort"    : 6379
+  },
+
+  "store": {
+    "output"        : "redis",
+    "serverAddress" : "127.0.0.1",
+    "serverPort"    : 6379,
+    "keyPrefix"     : "logtool:store"
+  },
+
+}

@@ -1,0 +1,9 @@
+{
+  "console":{
+    "module":"console"
+  },
+  "in.txt":{
+    "module":"file",
+    "fileName":"in.txt"
+  }
+}

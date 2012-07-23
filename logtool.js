@@ -2,10 +2,10 @@
 //  https://bitbucket.org/mazzarelli/js-opts/wiki/Home
 var opts = require('opts');
 
-var app = require('./lib/')
+var core = require('./lib/core.js')
 
 // CONSTANTS and defaults
-var APP_VERSION = '0.0.1';
+var APP_VERSION = core.version;
 var DEFAULT_DEBUG = false;
 var DEFAULT_LOG_CONFIG = './config/logs.json';
 var DEFAULT_INPUT_FILE_DIR = './test/data';
@@ -98,7 +98,7 @@ dbHost = opts.get('host') || DEFAULT_DB_HOST;
 dbPort = opts.get('port') || DEFAULT_DB_PORT;
 user = opts.get('user') || "";
 
-app.init()
-app.start()
+//core.init()
+core.start()
 
-app.stop()
+//core.stop()

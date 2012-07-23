@@ -1,0 +1,87 @@
+// dumping area for deprecated code.  Will be removed when I get more organized.
+
+/*
+    The log configuration closure, available functions: add(), get(), length()
+    Each entry stores: 
+      * {String} name The name to refer to this logging instance as
+      * {String} file The file path to the log
+      * {RegExp} parser The regular expression parser for the log
+      * {Array} labels The labels for matching items in the regular expression
+      * {RegExp} delimiter The delimiter for what is defined as an event
+*/
+var logConfig = function () {
+  var logs = []
+  return {
+    // add a configuration and return the index
+    add: function (cfg) {
+      var parserConfig = require(parsersDir + '/' + cfg.logParser)
+        , parser = new RegExp(parserConfig.regex, (parserConfig.multiline ? 'm' : ''))
+        , labels = parserConfig.labels
+        , delimiter = new RegExp((parserConfig.delimiter ? parserConfig.delimiter : '\n'))
+        , timeParser = (parserConfig.timestamp ? parserConfig.timestamp : '')
+      return logs.push({'name': cfg.logName, 'file': cfg.logFilePath, 'parser': parser, 'labels': labels, 'delimiter': delimiter, 'timeParser': timeParser})
+    }
+    // get the log configuration for a given index
+  , get: function (index) {
+      return logs[index]
+    }
+    // get the number of log configurations that are stored here
+  , length: function () {
+      return logs.length
+    }
+  }
+}()
+
+/*
+  Read configuration from config files
+  Set NODE_ENV on command line or use default in the application config file
+*/
+module.exports.init = function () {
+  console.info('Initializing ' + process.title + ' (version: ' + version + ')')
+  
+  // load application configuration
+  console.info('Loading application configuration')
+  envy.load(appConfigFile)
+  console.info('Environment: ' + envy.config.env)
+  
+  // load configuration for log files
+  console.info('Loading log file configuration')
+  var logs = require(logConfigFile)
+  for (var i = 0; i < logs.length; i++)
+    logConfig.add(logs[i])
+  
+  // connect to the event queue
+  if (envy.config.eventQueueServerType === 'redis') {
+    console.info('Connecting to Redis (persistent write)')
+    redisClient = redis.createClient(envy.config.eventQueueServerPort, envy.config.eventQueueServerAddress);
+    redisClient.on('error', function (error) {
+      console.error('Redis Error: ' + error)
+      process.exit(1)
+    })
+  }
+  else if (envy.config.eventQueueServerType === 'redis-pubsub') {
+    console.info('Connecting to Redis (publish/subscribe)')
+    redisClient = redis.createClient(envy.config.eventQueueServerPort, envy.config.eventQueueServerAddress);
+    redisClient.on('error', function (error) {
+      console.error('Redis Error: ' + error)
+      process.exit(1)
+    })
+  }
+  else {
+    console.warn('Only Redis is currently supported')
+    process.exit(1)
+  }
+  
+}
+
+/*
+  Send a log event to configured event queue
+  @param {Object} event The JSON object representing the log event
+*/
+var sendLogRecord = function (event, cb) {
+  if (envy.config.eventQueueServerType === 'redis')
+    sendRedis(event, cb)
+  else if (envy.config.eventQueueServerType === 'redis-pubsub')
+    publishRedis(event, cb)
+}
+
