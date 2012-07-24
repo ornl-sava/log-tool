@@ -4,6 +4,14 @@
   },
   "in.txt":{
     "module":"file",
-    "fileName":"in.txt"
+    "fileName":"in.txt",
+    "encoding":"utf-8"
+  },
+  "watch.in.txt":{
+    "module":"watch-file",
+    "fileName":"in.txt",
+    "timeout": 30000,
+    "interval": 100,
+    "encoding":"utf-8"
   }
 }

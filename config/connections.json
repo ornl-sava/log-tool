@@ -1,6 +1,6 @@
 [
   {
-    "input":"in.txt",
+    "input":"watch.in.txt",
     "parser":"null",
     "output":"out.txt"
   }
