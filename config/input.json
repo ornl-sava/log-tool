@@ -10,7 +10,7 @@
   "watch.in.txt":{
     "module":"watch-file",
     "fileName":"in.txt",
-    "timeout": 30000,
+    "timeout": 15000,
     "interval": 100,
     "encoding":"utf-8"
   }
