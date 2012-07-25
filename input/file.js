@@ -1,13 +1,10 @@
-exports.start = function(opts){
-  //console.info('opts: ' + JSON.stringify(opts) )
-  var input = require('fs').createReadStream('./'+opts.fileName, {encoding:'utf-8'})
-  return input
-}
+exports.module = function(opts){
+  var self = this;
+  self.stream = require('fs').createReadStream('./'+opts.fileName, {encoding:'utf-8'})
 
-exports.data = function(opts){
+  self.data = function(opts){
+  }
 
-}
-
-exports.end = function(opts){
-
+  self.end = function(opts){
+  }
 }

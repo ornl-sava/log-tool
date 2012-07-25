@@ -7,6 +7,11 @@
     "fileName":"in.txt",
     "encoding":"utf-8"
   },
+  "firewall-vast12":{
+    "module":"file",
+    "fileName":"test/data/firewall-vast12.csv",
+    "encoding":"utf-8"
+  },
   "watch.in.txt":{
     "module":"watch-file",
     "fileName":"in.txt",

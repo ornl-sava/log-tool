@@ -7,26 +7,44 @@
 */
 var moment = require('moment')
 
-exports.start = function(opts){
-  var regex = opts.regex;
-}
+var es = require('event-stream')
 
-exports.data = function(data){
-  var res = parseSync(data, rex, labels, timeRex)
-  this.emit('data', res)
-  /*
-  var lines = data.split('\n');
-  //NB: for real parsers, don't do this, use es.split( same regex you already have ) or es json equiv.
-  for(line in lines){
-    this.emit('data', lines[line] + '\n')
-    this.emit('data', 'and also ' + lines[line] + '\n')
-  }*/
-}
+exports.module = function(opts){
+  var self = this;
 
-exports.end = function(){
-  this.emit('end')
-}
+  self.rex = new RegExp(opts.regex)
+  self.labels = opts.labels
+  self.timeRex = opts.timestamp //TODO inconsistant with others ...
+  self.delimiter = new RegExp(opts.delimiter)
+  self.startTimeOffset = opts.startTimeOffset
 
+  self.oldBuf = "";
+
+  self.data = function(data){
+    if(self.oldBuf && self.oldBuf !== ""){
+      data = self.oldBuf + data
+      self.oldBuf = null;
+    }
+
+    var lines = data.split(self.delimiter);
+
+    if(lines.length > 1 && self.stream.readable){ //if not at end of file, save this line. //TODO needs more testing with longer files.
+      self.oldBuf = lines.pop()
+    }
+    console.info(JSON.stringify(lines))
+    for(var line in lines){
+      var res = parseSync(lines[line], self.rex, self.labels, self.timeRex)
+      this.emit('data', JSON.stringify(res) + '\n') //TODO remove stringify, only needed to test...
+      //this.emit('data', 'and also ' + lines[line] + '\n')
+    }
+  }
+
+  self.end = function(){
+    this.emit('end')
+  }
+
+  self.stream = es.through(self.data, self.end)
+}
 
 
 function parseTime(string, rex) {
@@ -58,7 +76,7 @@ var parseSync = function (event, rex, labels, timeRex) {
       }
     }
     else {
-      error = 'Error parsing event\n  Event: ' + event + '\n  Parser: ' + parser
+      error = 'Error parsing event\n  Event: ' + event + '\n  Parser: ' + rex
     }
   }
   catch (err) {

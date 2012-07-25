@@ -8,7 +8,7 @@
   , "labels": ["lineNumber", "timestamp", "priority", "operation", "messageCode", "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"]
   , "timestamp": "DD/MMM/YYYY HH:mm:ss"
   , "delimiter": "\r\n|\n"
-  , "start-time-offset":0
+  , "startTime":0
   },
   "snort":{
     "module":"regex"
@@ -16,6 +16,6 @@
   , "labels": ["lineNumber", "rule", "ruleText", "junkText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"]
   , "delimiter" : "\r\n\r\n|\n\n"
   , "timestamp" : "MM/DD-HH:mm:ss.SSS"
-  , "start-time-offset":0
+  , "startTime":0
   }
 }

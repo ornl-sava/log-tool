@@ -1,7 +1,13 @@
 [
   {
-    "input":"watch.in.txt",
+    "input":"firewall-vast12",
+    "parser":"firewall",
+    "output":"out.txt"
+  },
+  {
+    "input":"in.txt",
     "parser":"null",
     "output":"out.txt"
   }
+
 ]

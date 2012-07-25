@@ -1,10 +1,15 @@
-//not needed
-exports.start = function(opts){}
+var es = require('event-stream')
 
-exports.data = function(data){
-  this.emit('data', data)
-}
+exports.module = function(opts){
+  var self = this;
 
-exports.end = function(){
-  this.emit('end')
+  self.data = function(data){
+    this.emit('data', data)
+  }
+
+  self.end = function(){
+    this.emit('end')
+  }
+
+  self.stream = es.through(self.data, self.end)
 }

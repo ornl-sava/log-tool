@@ -1,15 +1,11 @@
-exports.start = function(opts){
-  //console.info('opts: ' + JSON.stringify(opts) )
+exports.module = function(opts){
   var GrowingFile = require('growing-file');
-  var file = GrowingFile.open('./'+opts.fileName, {timeout:opts.timeout, interval:opts.interval, encoding:opts.encoding});
-  //var input = require('fs').createReadStream('./'+opts.fileName, {encoding:'utf-8'})
-  return file
-}
+  var self = this;
+  self.stream = GrowingFile.open('./'+opts.fileName, {timeout:opts.timeout, interval:opts.interval, encoding:opts.encoding});
 
-exports.data = function(opts){
+  self.data = function(opts){
+  }
 
-}
-
-exports.end = function(opts){
-
+  self.end = function(opts){
+  }
 }

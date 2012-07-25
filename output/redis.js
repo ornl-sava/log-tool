@@ -1,3 +1,5 @@
+//TODO non-working
+
 /*  
     Import [redis](http://redis.io/) module
     @see https://github.com/mranney/node_redis
