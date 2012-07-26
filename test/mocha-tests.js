@@ -4,6 +4,7 @@ var assert = require('chai').assert; //like node's assert, but better.
 var fs = require('fs')
   , path = require('path')
   , redis = require('redis')
+  , async = require('async')
 
 var app = require('../lib/core')
 
@@ -32,18 +33,11 @@ describe("Testing the log reading and redis output",function(){
 suite("Testing input modules",function(){
   
   var files = fs.readdirSync('./test/input')
-  //console.info('found files: ' + JSON.stringify(files))
 
-  var moduleTest = function(file){
-    test('running tests in file '+file, function( done ){
-      require('./input/' + file).moduleTest( done );
-    });
+  for(var i=0; i< files.length; i++){
+    require('./input/' + files[i]) //apparently this is all you need to do, mocha will run them automagically
   }
-  
-  for(var i=0; i<files.length; i++){
-    moduleTest(files[i])
-  }
-  
+
 });
 
 /*
