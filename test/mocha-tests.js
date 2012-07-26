@@ -1,11 +1,11 @@
 var assert = require('chai').assert; //like node's assert, but better.
-var logGenerator = require('./logGenerator');
+//var logGenerator = require('./logGenerator');
 
 var fs = require('fs')
   , path = require('path')
   , redis = require('redis')
 
-var app = require('../lib/')
+var app = require('../lib/core')
 
 /*
 var io = require('socket.io/node_modules/socket.io-client'); //beats having it installed twice ...
@@ -29,6 +29,24 @@ describe("Testing the log reading and redis output",function(){
 });
 */
 
+suite("Testing input modules",function(){
+  
+  var files = fs.readdirSync('./test/input')
+  //console.info('found files: ' + JSON.stringify(files))
+
+  var moduleTest = function(file){
+    test('running tests in file '+file, function( done ){
+      require('./input/' + file).moduleTest( done );
+    });
+  }
+  
+  for(var i=0; i<files.length; i++){
+    moduleTest(files[i])
+  }
+  
+});
+
+/*
 describe("Testing redis pubsub",function(){
   //TODO real testing.
 
@@ -123,3 +141,4 @@ describe("Testing the log generator",function(){
   });
 
 });
+*/

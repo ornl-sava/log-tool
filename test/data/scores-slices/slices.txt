@@ -15,3 +15,8 @@ Description of each slice.  Start times are for the first item in the slice.
 5. 14:22 significant drop is traffic ( erik)
   Starts at 1333721760.0
 
+
+6. 6667 x > 18:06 dests 10.32.5.5x sources 
+
+7. 18:06-18:23 : all bad policy 172.23.1.168
+
