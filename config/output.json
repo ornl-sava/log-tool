@@ -6,6 +6,14 @@
     "module":"file",
     "fileName":"out.txt"
   },
+  "fw.out.txt":{
+    "module":"file",
+    "fileName":"fw.out.txt"
+  },
+  "ids.out.txt":{
+    "module":"file",
+    "fileName":"ids.out.txt"
+  },
   "pubsub": {
     "module"        : "redis-pubsub",
     "serverAddress" : "127.0.0.1",

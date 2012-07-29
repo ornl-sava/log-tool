@@ -1,113 +1,201 @@
+/*global module:true, require:true, console:true, process:true */
+
+/*
+  This module will transform a string into JSON string
+  It will input a stream, parse it according to a 
+  regular expression and output to a stream
+*/
+
 'use strict';
 
-/*  
-    Import moment date manipulation library
-    @see https://github.com/timrwood/moment
-    @requires
-*/
-var moment = require('moment')
+var Stream = require('stream').Stream
+  , util = require('util')
+  , moment = require('moment')
 
-var es = require('event-stream')
-
+//wrapper, so core.js has consistant interface
 exports.module = function(opts){
   var self = this;
-
-  self.rex = new RegExp(opts.regex)
-  self.labels = opts.labels
-  self.timeRex = opts.timestamp //TODO inconsistant with others ...
-  self.delimiter = new RegExp(opts.delimiter)
-  self.startTimeOffset = opts.startTimeOffset
-
-  self.oldBuf = "";
-
-  self.data = function(data){
-    if(self.oldBuf && self.oldBuf !== ""){
-      data = self.oldBuf + data
-      self.oldBuf = null;
-    }
-
-    var lines = data.split(self.delimiter);
-
-    if(lines.length > 1 && self.stream.readable){ //if not at end of file, save this line. //TODO needs more testing with longer files.
-      self.oldBuf = lines.pop()
-    }
-    console.info(JSON.stringify(lines))
-    for(var line in lines){
-      var res = parseSync(lines[line], self.rex, self.labels, self.timeRex)
-      this.emit('data', JSON.stringify(res) + '\n') //TODO remove stringify, only needed to test...
-      //this.emit('data', 'and also ' + lines[line] + '\n')
-    }
+  self.stream = new RegexStream (opts)
+  /*
+  self.data = function(opts){
   }
 
-  self.end = function(){
-    this.emit('end')
+  self.end = function(opts){
+  }*/
+}
+
+//actual RegexStream constructor, which does all actual work
+function RegexStream (regexConfig) {
+  this.writable = true
+  this.readable = true
+
+  this._paused = this._ended = this._destroyed = false
+
+  this._buffer = ''
+  
+  // set up options for parsing using a regular expression
+  if ( typeof regexConfig !== 'undefined' ) {
+    // if a regular expression config is defined, all of the pieces need to be defined
+    if ( typeof regexConfig.regex === 'undefined' ) {
+      this._hasRegex = false
+      this.emit('error', new Error('RegexStream: regex not correctly set up'))
+    }
+    else {
+      this._hasRegex = true
+      
+      // required
+      this._regex = new RegExp(regexConfig.regex)
+      this._labelsRegex = regexConfig.labels
+      
+      // optional
+      this._timeRegex = regexConfig.timestamp || ''
+      this._delimiter = new RegExp(regexConfig.delimiter || '\n') // default to split on newline
+    }
+  }
+  else {
+    this._hasRegex = false  // there is no regular expression
   }
 
-  self.stream = es.through(self.data, self.end)
+  Stream.call(this)
+  
+  return this
+}
+
+util.inherits(RegexStream, Stream)
+
+
+
+// assumes UTF-8
+RegexStream.prototype.write = function (str) {
+  // cannot write to a stream after it has ended
+  if ( this._ended ) 
+    throw new Error('RegexStream: write after end')
+
+  if ( ! this.writable ) 
+    throw new Error('RegexStream: not a writable stream')
+  
+  if ( this._paused ) 
+    return false
+  
+  var self = this
+
+  // parse each line asynchronously and emit the data (or error)
+  // TODO - empty funciton here b/c wanted a callback for testing, best if tests listen for events and get rid of the callback
+  if ( this._hasRegex ) {
+    this._parseString(str, function() {}) 
+  }
+  else {
+    // just emit the original data
+    self.emit('data', str)
+  }
+  
+  return true  
+}
+
+RegexStream.prototype.end = function (str) {
+  if ( this._ended ) return
+  
+  if ( ! this.writable ) return
+  
+  this._ended = true
+  this.readable = false
+  this.writable = false
+  
+  if ( arguments.length )
+    this.write(str)
+
+  this.emit('end')
+  this.emit('close')
+}
+
+RegexStream.prototype.pause = function () {
+  if ( this._paused ) return
+  
+  this._paused = true
+  this.emit('pause')
+}
+
+RegexStream.prototype.resume = function () {
+  if ( this._paused ) {
+    this._paused = false
+    this.emit('drain')
+  }
+}
+
+RegexStream.prototype.destroy = function () {
+  if ( this._destroyed ) return
+  
+  this._destroyed = true
+  this._ended = true
+
+  this.readable = false
+  this.writable = false
+
+  this.emit('end')
+  this.emit('close')
+}
+
+RegexStream.prototype.flush = function () {
+  this.emit('flush')
 }
 
 
-function parseTime(string, rex) {
+// callback is just used for testing
+RegexStream.prototype._parseString = function (data, callback) {
+  var lines = []
+    , error = ''
+    , result = {}
+    , results = []
+  
+  // this._buffer has any remainder from the last stream, prepend to the first of lines
+  if ( this._buffer !== '') {
+    data = this._buffer + data
+    this._buffer = '';
+  }
+
+  // split using the delimiter
+  lines = data.split(this._delimiter);
+
+  // loop through each all of the lines and parse
+  for ( var i = 0 ; i < lines.length ; i++ ) {
+    try {
+      result = {}
+      var parsed = this._regex.exec(lines[i])
+      if (parsed) {
+        for (var j = 1; j < parsed.length; j++) {
+          if (this._timeRegex !== '' && this._labelsRegex[j - 1] === 'timestamp')
+            result[this._labelsRegex[j - 1]] = this._parseTime(parsed[j], this._timeRegex)
+          else 
+            result[this._labelsRegex[j - 1]] = parsed[j]
+        }
+        this.emit('data', JSON.stringify(result)) //TODO only stringify as needed
+        results.push(result)
+      }
+      else {
+        error =  new Error('RegexStream: error parsing string\n  Line: ' + lines[i] + '\n  Parser: ' + this._regex)
+        this.emit('error', error)
+      }
+    }
+    catch (err){
+      error = new Error('RegexStream: parsing error - ' + err)
+      this.emit('error', error)
+    }
+  }
+  
+  //TODO can this lead to duplicate events of partial-line, then full-line?
+  // if not at end of file, save this line into this._buffer for next time
+  if ( lines.length > 1 && this.readable )
+    this._buffer = lines.pop()
+
+  callback(error, results)
+}
+
+// Uses [Moment.js](http://momentjs.com/) to parse a string into a timestamp
+// @return {Number} timestamp The number of milliseconds since the Unix Epoch
+RegexStream.prototype._parseTime = function (string, rex) {
   var timestamp = moment(string+"+0000", rex+"ZZ")
   // if there is no year in the timestamp regex set it to this year
   if (! rex.match(/YY/))
     timestamp.year(moment().year())
   return timestamp.valueOf()
 }
-
-/*
-    parse an event using the supplied regex
-    @param {String} event The event to parse, which may be one or more lines
-    @param {RegExp} rex The regular expression to use on the event
-    @param {Array} labels The labels to give the matched items
-    @param {RegExp} timeRex The regular expression to use for the timestamp
-*/
-var parseSync = function (event, rex, labels, timeRex) {
-  var result = {}
-  var error = ''
-  try {
-    var parsed = rex.exec(event)
-    if (parsed) {
-      for (var i = 1; i < parsed.length; i++) {
-        if (timeRex !== '' && labels[i - 1] === 'timestamp')
-          result[labels[i - 1]] = parseTime(parsed[i], timeRex)
-        else 
-          result[labels[i - 1]] = parsed[i]
-      }
-    }
-    else {
-      error = 'Error parsing event\n  Event: ' + event + '\n  Parser: ' + rex
-    }
-  }
-  catch (err) {
-    error = err
-  }
-
-  if(error === "")
-    return result
-  else{
-    throw new Error(error)
-    return null;
-  }
-}
-
-/*
-    parse an event using the supplied regex
-    @param {String} event The event to parse, which may be one or more lines
-    @param {RegExp} rex The regular expression to use on the event
-    @param {Array} labels The labels to give the matched items
-    @param {RegExp} timeRex The regular expression to use for the timestamp
-    @param {Function} callback(error, results) The callback to call when completed
-*/
-var parse = function (event, rex, labels, timeRex, callback) {
-  var result = {}
-  var error = ''
-  try{
-    result = parseSync(event, rex, labels, timeRex)
-  }
-  catch (err){
-    error = err;
-  }
-  callback(error, result)
-}
-

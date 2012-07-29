@@ -1,15 +1,11 @@
-var spec = require('stream-spec')
+var streamTests = require('../stream-tests-common.js')
 
-suite("Testing input module: console",function(){
-  test('testing against stream spec', function( done ){
+suite("Stream Specification Tests: console.js",function(){
+  test('should pass stream-spec validation for readable', function( ){
     var opts = {}
     var inputModule = require('../../input/console.js')
     var currInput = new inputModule.module(opts)
-    var stream = currInput.stream
-    spec(stream)
-      .readable()
-      .pausable({strict: false}) //strict is optional.
-      //.validateOnExit() //TODO
-    done()
+    streamTests.readableStreamSpec(currInput.stream)
   })
 })
+

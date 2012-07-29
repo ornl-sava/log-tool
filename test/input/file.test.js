@@ -1,15 +1,11 @@
-var spec = require('stream-spec')
+var streamTests = require('../stream-tests-common.js')
 
-suite("Testing input module: watch-file",function(){
-  test('testing against stream spec', function( done ){
+suite("Stream Specification Tests: file.js",function(){
+  test('should pass stream-spec validation for readable', function( ){
     var opts = { "fileName":"in.txt", "encoding":"utf-8"} 
     var inputModule = require('../../input/file.js')
     var currInput = new inputModule.module(opts)
-    var stream = currInput.stream
-    spec(stream)
-      .readable()
-      .pausable({strict: false}) //strict is optional.
-      //.validateOnExit() //TODO
-    done()
+    streamTests.readableStreamSpec(currInput.stream)
   })
 })
+

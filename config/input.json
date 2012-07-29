@@ -12,8 +12,18 @@
     "fileName":"test/data/firewall-vast12.csv",
     "encoding":"utf-8"
   },
+  "ids-vast12":{
+    "module":"file",
+    "fileName":"test/data/ids-vast12",
+    "encoding":"utf-8"
+  },
+  "nessus-example":{
+    "module":"file",
+    "fileName":"test/data/test.nbe",
+    "encoding":"utf-8"
+  },
   "watch.in.txt":{
-    "module":"watch-file",
+    "module":"file-watch",
     "fileName":"in.txt",
     "timeout": 15000,
     "interval": 100,

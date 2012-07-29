@@ -1,13 +1,7 @@
 [
   {
-    "input":"firewall-vast12",
-    "parser":"firewall",
-    "output":"out.txt"
-  },
-  {
-    "input":"in.txt",
-    "parser":"null",
+    "input":"nessus-example",
+    "parser":"nessus",
     "output":"out.txt"
   }
-
 ]
