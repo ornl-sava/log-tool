@@ -17,6 +17,7 @@ var redis = require('redis')
   It may be useful instead to have timestamp as part of the key: sensor:destip:timestamp
   @param {Object} record The data to send to redis
 */
+/*
 var sendRedis = function (record, cb) {
   var key = record.sensorType + ':' + record.destIP
     , val = {}
@@ -26,3 +27,4 @@ var sendRedis = function (record, cb) {
   }
   redisClient.hmset(key, val, function (err, res){ cb(err, res) })
 }
+*/

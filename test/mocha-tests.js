@@ -22,7 +22,7 @@ suite("Testing input modules",function(){
 
 });
 
-/*
+
 suite("Testing output modules",function(){
   
   var files = fs.readdirSync('./test/output')
@@ -32,7 +32,7 @@ suite("Testing output modules",function(){
   }
 
 });
-*/
+
 suite("Testing parser modules",function(){
   
   var files = fs.readdirSync('./test/parsers')

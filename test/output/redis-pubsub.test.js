@@ -14,6 +14,7 @@ var redis = require('redis')
   @see http://redis.io/topics/pubsub
   @param {Object} record The data to send to redis
 */
+/*
 var publishRedis = function (record, cb) {
   var channel = 'events' // TODO - this should be configuration option
   if(verbose){ 
@@ -21,4 +22,4 @@ var publishRedis = function (record, cb) {
   }
   redisClient.publish(channel, JSON.stringify(record), function (err, res){ cb(err, res) })
 }
-
+*/
