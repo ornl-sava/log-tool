@@ -1,25 +1,14 @@
-//TODO non-working
+var streamTests = require('../stream-tests-common.js')
 
-/*  
-    Import [redis](http://redis.io/) module
-    @see https://github.com/mranney/node_redis
-    @requires
-*/
-var redis = require('redis')
-  , redisClient
+var outputModule = require('../../output/redis-pubsub.js')
 
-
-/*
-  Publish data to redis using publish / subscribe
-  @see http://redis.io/topics/pubsub
-  @param {Object} record The data to send to redis
-*/
-/*
-var publishRedis = function (record, cb) {
-  var channel = 'events' // TODO - this should be configuration option
-  if(verbose){ 
-    console.log('publish to redis channel: ' + channel + ', message: ' + util.inspect(record))
-  }
-  redisClient.publish(channel, JSON.stringify(record), function (err, res){ cb(err, res) })
-}
-*/
+suite("Stream Specification Tests: redis-pubsub.js",function(){
+  test('should pass stream-spec validation for writable', function( ){
+    var opts = {
+      "serverAddress" : "127.0.0.1",
+      "serverPort"    : 6379,
+      "channel"       : "events"
+    } 
+    streamTests.writableStreamSpec( (new outputModule.module(opts)).stream )
+  })
+})

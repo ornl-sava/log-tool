@@ -14,16 +14,16 @@
     "module":"file",
     "fileName":"ids.out.txt"
   },
-  "pubsub": {
+  "redis-pubsub": {
     "module"        : "redis-pubsub",
     "serverAddress" : "127.0.0.1",
-    "serverPort"    : 6379
+    "serverPort"    : 6379,
+    "channel"       : "events"
   },
-
-  "store": {
+  "redis-store": {
     "module"        : "redis",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
-    "keyPrefix"     : "logtool:store"
+    "keyPrefix"     : "logtool:events"
   }
 }

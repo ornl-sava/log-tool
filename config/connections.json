@@ -2,6 +2,6 @@
   {
     "input":"nessus-example",
     "parser":"nessus",
-    "output":"out.txt"
+    "output":"redis-store"
   }
 ]
