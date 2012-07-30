@@ -1,4 +1,5 @@
-var assert = require('chai').assert;
+var assert = require('chai').assert
+  , moment = require('moment')
 var streamTests = require('../stream-tests-common.js')
 
 var RegexStream = require('../../parsers/regex.js').module
@@ -24,6 +25,10 @@ suite('Stream Specification Tests: regex.js', function() {
 suite('RegEx Parse Tests', function() {
   test('should pass simple regular expression parsing', function( done ){
     simpleRegex( done )
+  })
+
+  test('should pass timestamp expression parsing', function( done ){
+    timestampRegex( done )
   })
 
   test('should parse firewall entries (csv format)', function( done ){
@@ -61,6 +66,37 @@ var simpleRegex = function (done) {
   })
 }
 
+var timestampRegex = function (done) {
+  // define the test data
+  var data = '2012/07/25 10:00:00+0000: First line\n2012/07/25 14:14:14+0000: Second line\n2012/07/26 07:00:00+0000: Third line\n2012/07/26 07:07:07+0000: Fourth line'
+
+  // define the regular expression
+  var timeFormatter = "YYYY/MM/DD HH:MM:SS+Z"
+  var parser = {
+      "regex": "^([\\S\\s]+): ([\\S\\s]+)"
+    , "labels": ["timestamp", "line"]
+    , "fields": {
+        "timestamp": {"regex": timeFormatter, "type": "moment"}
+      }
+  }
+
+  var expected = [
+    { timestamp: moment('2012/07/25 10:00:00+0000', timeFormatter).valueOf(), line: 'First line' }
+  , { timestamp: moment('2012/07/25 14:14:14+0000', timeFormatter).valueOf(), line: 'Second line' }
+  , { timestamp: moment('2012/07/26 07:00:00+0000', timeFormatter).valueOf(), line: 'Third line' }
+  , { timestamp: moment('2012/07/26 07:07:07+0000', timeFormatter).valueOf(), line: 'Fourth line' }
+  ]
+
+  var regexStream = (new RegexStream(parser)).stream
+  regexStream._parseString(data, function(err, out) {
+    if ( err )
+      throw err
+    assert.deepEqual(out, expected)
+    done()
+  })
+  
+}
+
 var firewallRegex = function (done) {
   // define the test data
   var data = '05/Apr/2012 17:56:48,Info,Teardown,ASA-6-302016,UDP,172.23.0.10,193.0.14.129,(empty),(empty),64048,53,domain,outbound,0,1\n'+
@@ -74,7 +110,10 @@ var firewallRegex = function (done) {
                   "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
                   "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"
                 ]
-    , "timestamp": "DD/MMM/YYYY HH:mm:ss"
+    , "fields": {
+        "timestamp": {"regex": "DD/MMM/YYYY HH:mm:ss", "type": "moment"}
+      }
+    //, "timestamp": "DD/MMM/YYYY HH:mm:ss"
     , "delimiter": "\r\n|\n"
     , "startTime":0
   }
@@ -135,7 +174,10 @@ var idsRegex = function (done) {
   "regex": "^\\[\\*\\*\\] \\[([0-9:]+)\\] ([\\S\\s]*) \\[\\*\\*\\]\\s*[\r\n|\r|\n](\\[Classification: ){0,1}([\\S\\s]*){0,1}?\\]{0,1} {0,1}\\[Priority: (\\d+)\\]\\s*[\r\n|\r|\n](\\d{2}\\/\\d{2}\\-\\d{2}:\\d{2}:\\d{2}\\.\\d{3})\\d{3} ([\\d\\.]+):{0,1}(\\d+){0,1} \\-> ([\\d\\.]+):{0,1}(\\d+){0,1}\\s*[\r\n|\r|\n]([\\s\\S]+)"
   , "labels": ["rule", "ruleText", "junkText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"]
   , "delimiter" : "\r\n\r\n|\n\n"
-  , "timestamp" : "MM/DD-HH:mm:ss.SSS"
+    , "fields": {
+        "timestamp": {"regex": "MM/DD-HH:mm:ss.SSS", "type": "moment"}
+      }
+  //, "timestamp" : "MM/DD-HH:mm:ss.SSS"
   , "startTime":0
   }
 
