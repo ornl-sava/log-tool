@@ -22,6 +22,7 @@ app.on('request', gzip)
 app.route('/public/*').files(path.join(__dirname, './public'))
 app.route('/js/*').files(path.join(__dirname, './public/js'))
 app.route('/css/*').files(path.join(__dirname, './public/css'))
+app.route('/img/*').files(path.join(__dirname, './public/img'))
 
 // routes
 app.route('/')
