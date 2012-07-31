@@ -12,6 +12,7 @@ var Stream = require('stream').Stream
   , util = require('util')
   , moment = require('moment')
   , redis = require('redis')
+  , reds = require('reds')
 
 var verbose = false //TODO meh.
 
@@ -40,6 +41,8 @@ function RedisStream (opts) {
   
   this.eventID = 0 //will be appended to end of all keys to guarantee unique.  Counts events.
   this.keyPrefix = opts.keyPrefix
+  this.index = opts.index
+  this.indexedFields = opts.indexedFields
   var redisOpts = {}//see https://github.com/mranney/node_redis#rediscreateclientport-host-options for options.
 
   this.redisClient = redis.createClient(opts.serverPort, opts.serverAddress, redisOpts)
@@ -68,6 +71,18 @@ RedisStream.prototype.write = function (record) {
   }
   //TODO callback need to do anything?
   this.redisClient.set(key, record, function (err, res){  })
+
+  //console.log('index flag set ' + this.index + ', indexedFields: ' + util.inspect(this.indexedFields))
+  if(this.index){
+    var search = reds.createSearch('search');
+    var field = ""
+    for(var i=0; i< this.indexedFields.length; i++){
+      //search.index('blah something coffee', key);
+      field = this.indexedFields[i]
+      search.index(record[field], key);
+    }
+    //search.index('Foo bar baz', 'abc');
+  }
 
   this.eventID += 1
 

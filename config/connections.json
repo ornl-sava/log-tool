@@ -2,6 +2,11 @@
   {
     "input":"nessus-example",
     "parser":"nessus",
-    "output":"redis-pubsub"
+    "output":"nessus-pubsub"
+  },
+  {
+    "input":"nessus-example",
+    "parser":"nessus",
+    "output":"nessus-store"
   }
 ]

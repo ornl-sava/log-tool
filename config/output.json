@@ -14,16 +14,18 @@
     "module":"file",
     "fileName":"ids.out.txt"
   },
-  "redis-pubsub": {
+  "nessus-pubsub": {
     "module"        : "redis-pubsub",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
-    "channel"       : "events"
+    "channel"       : "events.nessus"
   },
-  "redis-store": {
+  "nessus-store": {
     "module"        : "redis",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
-    "keyPrefix"     : "logtool:events"
+    "keyPrefix"     : "logtool:events:nessus",
+    "index"         : true,
+    "indexedFields" : ["ip", "port", "vulnid"]
   }
 }

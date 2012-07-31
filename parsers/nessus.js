@@ -66,7 +66,7 @@ NessusStream.prototype.write = function (data) {
     try {
       if(lines[i] !== ""){
         var result = this.parseNessusResult(lines[i])
-        this.emit('data', JSON.stringify(result) + '\n') //TODO only stringify as needed
+        this.emit('data', result)
       }
     }
     catch (err){

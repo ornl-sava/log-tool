@@ -189,7 +189,7 @@ RegexStream.prototype._parseString = function (data, callback) {
             result[label] = parsed[j]
           }
         }
-        this.emit('data', JSON.stringify(result)) //TODO only stringify as needed
+        this.emit('data', result)
         results.push(result)
       }
       else {
