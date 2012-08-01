@@ -27,5 +27,33 @@
     "keyPrefix"     : "logtool:events:nessus",
     "index"         : true,
     "indexedFields" : ["ip", "port", "vulnid"]
+  },
+  "fw-pubsub": {
+    "module"        : "redis-pubsub",
+    "serverAddress" : "127.0.0.1",
+    "serverPort"    : 6379,
+    "channel"       : "events.firewall"
+  },
+  "fw-store": {
+    "module"        : "redis",
+    "serverAddress" : "127.0.0.1",
+    "serverPort"    : 6379,
+    "keyPrefix"     : "logtool:events:firewall",
+    "index"         : true,
+    "indexedFields" : ["direction", "operation", "priority", "protocol", "sourceIP", "destIP", "sourcePort", "destPort"]
+  },
+  "ids-pubsub": {
+    "module"        : "redis-pubsub",
+    "serverAddress" : "127.0.0.1",
+    "serverPort"    : 6379,
+    "channel"       : "events.ids"
+  },
+  "ids-store": {
+    "module"        : "redis",
+    "serverAddress" : "127.0.0.1",
+    "serverPort"    : 6379,
+    "keyPrefix"     : "logtool:events:ids",
+    "index"         : true,
+    "indexedFields" : ["sourceIP", "sourcePort", "destIP", "destPort", "ruleText"]
   }
 }
