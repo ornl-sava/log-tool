@@ -61,7 +61,7 @@ app.sockets.on('connection', function (socket) {
           if (err) throw err
           var resultsString = ''
           for(var i=0; i< results.length; i++){
-            resultsString += '  ' + ids[i] + ':\n    ' + results[i]
+            resultsString += '  ' + ids[i] + ':\n    ' + results[i] + '\n'
           }
           if(resultsString === ''){
             resultsString = '  (none)'
