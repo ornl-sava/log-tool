@@ -1,79 +1,148 @@
 # log-tool
 
-`log-tool` will watch log files, convert them to JSON, and send the updates to an event queue.
+`log-tool` is a utility that can read, parse, and write data from log files and similar data sources.  It has a simple modular architecture, consisting of "input modules" to read the data, "parser modules" to format the data as needed, and "output modules" that send this data to some destination.  Each of these modules is stream based, and the configuration of these modules and how they will be connected is specified in several simple configuration files.
 
-## Application Configuration
 
-There is a single JSON configuration file, `config.json`, in `config`. The server reads this file using [node-envy](https://github.com/eliOcs/node-envy). The default is to use the `development` environment, so in production, simply change the `environment` setting at the top of the file:
+## Configuration Files
+
+All of the following are json files located in the `config` directory.
+
+### Application Configuration
+
+The file `config.json` handles any configuration options for the application overall, such as how verbose its logging should be.
+
+The default is to use the `development` environment, so in production, simply change the `environment` setting at the top of the file:
 
     "environment": "production"
 
 Configuration options in `development` are inherited by `production`, but you can override them in the `production` block.
 
-There are currently two supported output types, denoted by the `eventQueueServerType`:
+### Input Configuration
 
-  * `redis`: persists the log event in a [hash](http://redis.io/commands#hash) in redis
-  * `redis-pubsub`: sends the log event to the `events` [pubsub](http://redis.io/topics/pubsub) channel
+The file `input.json` specifies all needed information for each source of data.
 
-## Log Configuration
-
-The log files to process are stored in the log configuration file, `logs.json`, in `config`. The file must contain an array of log definitions, where each log definition is in the format: 
+In general, this config file names specific instances using their specified modules, and then pass the remaining values to that module for its constructor to handle.  Each instance name acts as a key for getting its configuration object.  A simple example may contain:
 
     {
-      "logName" : "name of this logging instance",
-      "logFilePath" : "path to the log file",
-      "logParser" : "name of the parser to use"
+      "source1":{
+        "module":"file",
+        "fileName":"test/data/some_file",
+        "encoding":"utf-8"
+      },
+      "source2":{
+        "module":"file-watch",
+        "fileName":"in.txt",
+        "timeout": 15000,
+        "interval": 100,
+        "encoding":"utf-8"
+      }
     }
 
-`logName` is used in the metadata sent to the event queue. `logFilePath` is the log file to watch. The parsers are stored in the `parsers` directory. 
+"source1" and "source2" are the names of these sources, "file" and "file-watch" are the modules these sources will use, and the remaining options will be passed to these instances of these modules.  In this example, the "file" module will be past a relative path and an encoding, while "file-watch" will be passed a relative path, an encoding, an interval to check for changes to this file, and a timeout value for when to stop watching this file.
 
-## Parsers Configuration
+### Output Configuration
 
-logtool.js - entry point.  Can either display/modify the configuration information, or launch the main logtool process.
+The file `output.json` specifies all needed information for each destination of the data.
 
-input - input modules
-
-output - output modules
-
-parsers - parser modules
-
-config - configuration files.  Both global configuration info and configuration for modules and named sources and destinations.
-
-lib - all core libraries for logtool (ie. everything except modules described above)
-
-
-
-
-# Old documentation, TODO merge me!
-
-Log events are parsed into JSON before sending to the event queue. To parse the log file into JSON, create a parser configuration file and put it in the `parsers` directory. The format of the parser file is:
+Like above, this config file names specific instances using their specified modules, and then pass the remaining values to that module for its constructor to handle.  Each instance name acts as a key for getting its configuration object.  A simple example may contain:
 
     {
-      "regex" : "JavaScript regular expression string",
-      "labels": [label array],
-      "delimiter": "optional event delimiter string",
-      "multiline": "optional boolean indicating if event spans lines",
-      "field": "optional regular expression string to parse a field"
+      "dest1":{
+        "module":"file",
+        "fileName":"ids.out.txt"
+      },
+      "dest2": {
+        "module"        : "redis-pubsub",
+        "serverAddress" : "127.0.0.1",
+        "serverPort"    : 6379,
+        "channel"       : "events.nessus"
+      }
     }
 
-The `regex` string must be a valid JavaScript [Regular Expression](https://developer.mozilla.org/en/JavaScript/Guide/Regular_Expressions). Each item that you want to extract and label should be in parentheses. The order of the parentheses objects in the expression must match the order of the labels. Note that backslashes must be escaped, so to match one or more digits, use `(\\d+)`, or to match a literal asterisk, use `\\*`. `delimiter` optionally allows setting an event delimiter, which is useful if you have multiple events on a line, or if an event spans multiple lines (default is a newline, `\r`). `multiline` optionally allows setting whether or not a log event is multiple lines, which sets the `^` and `$` in the regular expression to be per line, instead of the entire string (default is false). The `field` optionally allows parsing out subfields, such as a timestamp; this can be a valid JavaScript regular expression, or a valid [moment.js](http://momentjs.com/docs/#/parsing/string-format/) date string. (Currently, this only works for time.)
+"dest1" and "dest2" are the names of these destinations, "file" and "redis-pubsub" are the modules these will use, and the remaining options will be passed to these instances of these modules.  In this example, the "file" module only needs to be passed a path, while the "redis-pubsub" module will be passed an address, a port, and the channel to use for sending its messages.
 
-## Usage
+As another example:
 
-The only dependency is [node.js](http://nodejs.org/). To run, modify the configuration files as appropriate and then:
+    "nessus-store": {
+      "module"        : "redis",
+      "serverAddress" : "127.0.0.1",
+      "serverPort"    : 6379,
+      "keyPrefix"     : "logtool:events:nessus",
+      "index"         : true,
+      "indexedFields" : ["ip", "port", "vulnid"]
+    }
 
-    ./bin/log-tool
+This instance is named "nessus-store", uses the "redis" module, and passes it similar values as above, except instead of needing a channel name, it needs information about how to name its keys and which fields to include in its index.
 
-## Event Queue
+### Parser Configuration
 
-Currently, [redis](http://redis.io/) is the only option for the event queue. Set the configuration options for your redis instance.
+The file `parsers.json` specifies all needed information for each parser.
 
-## Cluster
+Like above, this config file names specific instances using their specified modules, and then pass the remaining values to that module for its constructor to handle.  Each instance name acts as a key for getting its configuration object.  An example may contain:
 
-By default, `log-tool` will start up a separate process for each log file.
+    {
+      "null":{
+        "module":"null"
+      },
+      "nessus":{
+        "module":"nessus"
+      },
+      "firewall":{
+        "module":"regex"
+      , "regex": "^([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+)"
+      , "labels": ["timestamp", "priority", "operation", "messageCode", 
+                    "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
+                    "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"
+                  ]
+      , "fields": { "timestamp": {"regex": "DD/MMM/YYYY HH:mm:ss", "type": "moment"} }
+      , "delimiter": "\r\n|\n"
+      , "startTime":0
+      }
+    }
+
+"null", "nessus", and "firewall" are again the names of these parsers, and "null", "nessus", and "regex" are the modules these sources will use. The "null" and "nessus" modules do not require any additional options, while the "regex" module requires many additional options due to its more generic purpose.
+
+### Connection Configuration
+
+The file `connections.json` is somewhat different from the other configuration files.  This simply contains a list of connections to make between the names in the other config files.  For example:
+
+    [
+      {
+        "input":"source1",
+        "parser":"null",
+        "output":"dest1"
+      },
+      {
+        "input":"nessus-file",
+        "parser":"nessus",
+        "output":"nessus-store"
+      }
+    ]
+
+The first entry will connect `input` to the parser named `null` to the output `dest1` -- this example will simply copy the file unmodified.
+
+The second entry will connect `nessus-file` to the parser `nessus` to the output `nessus-store` -- this example will read and parse the specified nessus file, and store each entry in redis.
+
+## Project Organization
+
+logtool.js - launches the main logtool process.
+
+input, output, and parsers directories - contain the modules of each type
+
+config directory - contains configuration files, as described above
+
+test directory - contains all test scripts and data.  Tests for each module are included in `test/module_type/module_name.test.js`
+
+webserver directory - contains the webapp demo, described below.
+
+lib directory - contains all core libraries for logtool (ie. everything except for the modules described above)
 
 ## Testing
 
-## Development notes
+All tests can be run with `mocha -u tdd -R spec`  
 
-Currently using the `release/1.6.0` branch of [moment.js](http://momentjs.com/) in order to support parsing time strings to millisecond resolution. When this is merged with head and released to npm, this should be updated.
+Any module can be tested individually by also passing the location of its tests, such as `mocha -u tdd -R spec ./test/parsers/regex.test.js`
+
+## Webapp Demo
+
+This project also includes a simple webapp, to demonstrate the use of these various components.  It's super cool.
