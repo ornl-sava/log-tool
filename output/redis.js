@@ -70,7 +70,7 @@ RedisStream.prototype.write = function (record) {
     console.log('sending to redis: key: ' + key + ', val: ' + util.inspect(record))
   }
   //TODO callback need to do anything?
-  this.redisClient.set(key, record, function (err, res){  })
+  this.redisClient.set(key, JSON.stringify(record), function (err, res){  }) //TODO
 
   //console.log('index flag set ' + this.index + ', indexedFields: ' + util.inspect(this.indexedFields))
   if(this.index){

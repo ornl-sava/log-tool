@@ -7,6 +7,7 @@
  */
 
 var channels = ['firewall', 'ids', 'nessus', 'misc']
+var socket
 
 function initConnections() {
 
@@ -22,7 +23,6 @@ function initConnections() {
           }
 
   console.debug( 'attempting to establish socket.io connection to ' + ioHost);
-  //socket = io.connect(ioHost, socketioOptions)
   socket = io.connect(ioHost, socketioOptions)
   
   socket.on('connecting', function(transportType) {
@@ -48,35 +48,37 @@ function initConnections() {
   socket.on('init', function (msg) {
     console.debug( 'socket.io initialization' )
   })
+
+  socket.on('search_results', function (msg) {
+    console.debug( 'got search results message: ' + msg )
+    var old = $('#searchResultsTextarea').text()
+    $('#searchResultsTextarea').text(msg + '\n' + old)
+  })
   
   //TODO should have less hardcoding & more code re-use between these remaining message handlers.
   //general events channel, for debugging.
   socket.on('events', function (msg) {
     console.debug( 'got event message on channel events: ' + msg )
   })
-  //general events channel, for debugging.
   socket.on('events.firewall', function (msg) {
     console.debug( 'got event message on channel events.firewall: ' + msg )
     var old = $('#dataTextarea1').text()
-    $('#dataTextarea1').text(old + msg + '\n')
+    $('#dataTextarea1').text(msg + '\n' + old)
   })
-  //general events channel, for debugging.
   socket.on('events.ids', function (msg) {
     console.debug( 'got event message on channel events.ids: ' + msg )
     var old = $('#dataTextarea2').text()
-    $('#dataTextarea2').text(old + msg + '\n')
+    $('#dataTextarea2').text(msg + '\n' + old)
   })
-  //general events channel, for debugging.
   socket.on('events.nessus', function (msg) {
     console.debug( 'got event message on channel events.nessus: ' + msg )
     var old = $('#dataTextarea3').text()
-    $('#dataTextarea3').text(old + msg + '\n')
+    $('#dataTextarea3').text(msg + '\n' + old)
   })
-  //general events channel, for debugging.
   socket.on('events.misc', function (msg) {
     console.debug( 'got event message on channel events.misc: ' + msg )
     var old = $('#dataTextarea4').text()
-    $('#dataTextarea4').text(old + msg + '\n')
+    $('#dataTextarea4').text(msg + '\n' + old)
   })
 }
 
@@ -90,27 +92,20 @@ function resize() {
   //TODO needed?
 }
 
-/*
-function handleChannelTab1(){
-  console.log("channel 1 tab active");
+function handleSearch(){
+  console.debug("pressed search button");
+  var terms = $('#search-query').val()
+  socket.emit('search', terms)
 }
-
-function handleChannelTab2(){
-  console.log("channel 2 tab active");
-}
-*/
 
 // initialization
 $().ready(function () {
   // set up needed event listeners, etc.
-/*
-  $('#channel1Link').bind('click', function(event) {
-    handleChannelTab1();
-  });
-  $('#channel2Link').bind('click', function(event) {
-    handleChannelTab2();
-  });
-*/
+  $('#search-button').bind('click', function(event) {
+    handleSearch()
+    return false
+  })
+
 
   //give tabs proper names and descriptions
   for(var i=0; i< channels.length; i++){

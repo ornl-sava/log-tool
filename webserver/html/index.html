@@ -25,7 +25,7 @@
                       <div class="controls">
                         <div class="input-append">
                           <input id="search-query" type="text" name="query" autocomplete="off" style="width:200px;" class="input-xlarge">
-                          <button class="btn btn-primary btn-inverse btn-small">
+                          <button class="btn btn-primary btn-inverse btn-small" id="search-button">
                             <i class="icon-search icon-white"></i>
                           </button>
                         </div>
@@ -49,6 +49,7 @@
               <li><a href="#channel2"  id="channel2Link" data-toggle="tab">Data</a></li>
               <li><a href="#channel3"  id="channel3Link" data-toggle="tab">Data</a></li>
               <li><a href="#channel4"  id="channel4Link" data-toggle="tab">Data</a></li>
+              <li><a href="#searchResults"  id="searchResultsLink" data-toggle="tab">Search Results</a></li>
             </ul>
 
             <div class="tab-content">
@@ -71,6 +72,11 @@
               <div class="tab-pane" id="channel4">
                 <div class="tab-description">Events on channel 4</div>
                 <textarea rows="25" class="dataTextarea" id="dataTextarea4" readonly></textarea>
+              </div>
+
+              <div class="tab-pane" id="searchResults">
+                <div class="tab-description">Search results</div>
+                <textarea rows="25" class="dataTextarea" id="searchResultsTextarea" readonly></textarea>
               </div>
               
             </div>
