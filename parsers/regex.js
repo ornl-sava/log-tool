@@ -12,19 +12,9 @@ var Stream = require('stream').Stream
   , util = require('util')
   , moment = require('moment')
 
-//wrapper, so core.js has consistant interface
-exports.module = function(opts){
-  var self = this;
-  self.stream = new RegexStream (opts)
-  /*
-  self.data = function(opts){
-  }
+module.exports = RegexStream
 
-  self.end = function(opts){
-  }*/
-}
-
-//actual RegexStream constructor, which does all actual work
+//actual RegexStream constructor
 function RegexStream (regexConfig) {
   
   this._appName = require('../package').name

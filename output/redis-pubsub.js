@@ -15,17 +15,7 @@ var Stream = require('stream').Stream
 
 var verbose = false //TODO meh.
 
-//wrapper, so core.js has consistant interface
-exports.module = function(opts){
-  var self = this;
-  self.stream = new RedisStream (opts)
-  /*
-  self.data = function(opts){
-  }
-
-  self.end = function(opts){
-  }*/
-}
+module.exports = RedisStream
 
 //actual RedisStream constructor, which does all actual work
 function RedisStream (opts) {

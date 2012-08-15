@@ -1,10 +1,6 @@
-exports.module = function(opts){
-  var self = this;
-  self.stream = process.stdin
-  /*
-  self.data = function(opts){
-  }
+module.exports = ConsoleStream
 
-  self.end = function(opts){
-  }*/
+function ConsoleStream(opts){
+  //fake constructor
+  return process.stdin
 }

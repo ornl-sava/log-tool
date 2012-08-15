@@ -2,25 +2,25 @@ var assert = require('chai').assert
   , moment = require('moment')
 var streamTests = require('../stream-tests-common.js')
 
-var RegexStream = require('../../parsers/regex.js').module
+var RegexStream = require('../../parsers/regex.js')
 
 suite('Stream Specification Tests: regex.js', function() {
 
   test('should pass stream-spec validation for through', function(){
-    streamTests.throughStreamSpec( (new RegexStream()).stream )
+    streamTests.throughStreamSpec( new RegexStream() )
   })
 
   test('should pass stream-spec validation for writable', function(){
-    streamTests.writableStreamSpec( (new RegexStream()).stream )
+    streamTests.writableStreamSpec( new RegexStream() )
   })
 
   //TODO why won't this pass?
-  /*
+/*
   test('should pass stream-spec validation for readable', function(){
-    streamTests.readableStreamSpec( (new RegexStream()).stream )
+    streamTests.readableStreamSpec( new RegexStream() )
   })
-  */
-}) 
+*/
+})
 
 suite('RegEx Parse Tests', function() {
   test('should pass simple regular expression parsing', function( done ){
@@ -57,7 +57,7 @@ var simpleRegex = function (done) {
   , {"A label":"56","B label":"78","C label":"90"}
   ]
 
-  var regexStream = (new RegexStream(parser)).stream
+  var regexStream = new RegexStream(parser)
   regexStream._parseString(data, function(err, out) {
     if ( err )
       throw err
@@ -87,7 +87,7 @@ var timestampRegex = function (done) {
   , { timestamp: moment('2012/07/26 07:07:07+0000', timeFormatter).valueOf(), line: 'Fourth line' }
   ]
 
-  var regexStream = (new RegexStream(parser)).stream
+  var regexStream = new RegexStream(parser)
   regexStream._parseString(data, function(err, out) {
     if ( err )
       throw err
@@ -139,7 +139,7 @@ var firewallRegex = function (done) {
       }
   ]
 
-  var regexStream = (new RegexStream(parser)).stream
+  var regexStream = new RegexStream(parser)
   regexStream._parseString(data, function(err, out) {
     if ( err )
       throw err
@@ -187,7 +187,7 @@ var idsRegex = function (done) {
 {"rule":"1:2103000:7","ruleText":"GPL NETBIOS SMB Session Setup NTMLSSP unicode asn1 overflow attempt","junkText":"[Classification: ","classification":"Generic Protocol Command Decode] ","priority":"3","timestamp":1333648500960,"sourceIP":"172.23.1.101","sourcePort":"1104","destIP":"172.23.0.10","destPort":"139","packetInfo":"TCP TTL:128 TOS:0x0 ID:1663 IpLen:20 DgmLen:1500 DF\n***A**** Seq: 0x54FEF4C7  Ack: 0x9BEB6342  Win: 0xFF36  TcpLen: 20\n[Xref => http://www.microsoft.com/technet/security/bulletin/MS04-007.mspx][Xref => http://cgi.nessus.org/plugins/dump.php3?id=12065][Xref => http://cgi.nessus.org/plugins/dump.php3?id=12052][Xref => http://cve.mitre.org/cgi-bin/cvename.cgi?name=2003-0818][Xref => http://www.securityfocus.com/bid/9635][Xref => http://www.securityfocus.com/bid/9633]"}
   ]
 
-  var regexStream = (new RegexStream(parser)).stream
+  var regexStream = new RegexStream(parser)
   regexStream._parseString(data, function(err, out) {
     if ( err )
       throw err

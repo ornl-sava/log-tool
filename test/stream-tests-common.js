@@ -8,7 +8,6 @@ var writableStreamSpec = exports.writableStreamSpec = function (stream) {
   
   //s.validate()
   //s.validateOnExit()
-  setTimeout(s.validateOnExit, 50) //without this, I think validateOnExit runs before the 'end' event occurs? (speculation)
     //TODO look into above issue further ...
 }
 
@@ -16,7 +15,8 @@ var readableStreamSpec = exports.readableStreamSpec = function (stream) {
   var s = spec(stream, {end: false, strict: true}).readable().pausable()
   
   stream.destroy()
-  setTimeout(s.validateOnExit, 50) //without this, I think validateOnExit runs before the 'end' event occurs? (speculation)
+  //s.validate()
+  //s.validateOnExit()
     //TODO look into above issue further ...
 }
 

@@ -9,6 +9,6 @@ suite("Stream Specification Tests: redis-pubsub.js",function(){
       "serverPort"    : 6379,
       "channel"       : "events"
     } 
-    streamTests.writableStreamSpec( (new outputModule.module(opts)).stream )
+    streamTests.writableStreamSpec( new outputModule(opts) )
   })
 })

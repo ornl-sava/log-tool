@@ -9,19 +9,9 @@
 var Stream = require('stream').Stream
   , util = require('util')
 
-//wrapper, so core.js has consistant interface
-exports.module = function(opts){
-  var self = this;
-  self.stream = new NullThroughStream (opts)
-  /*
-  self.data = function(opts){
-  }
+module.exports = NullThroughStream
 
-  self.end = function(opts){
-  }*/
-}
-
-//actual NullThroughStream constructor, which does all actual work
+//actual NullThroughStream constructor
 function NullThroughStream (opts) {
   this.writable = true
   this.readable = true
@@ -58,6 +48,7 @@ NullThroughStream.prototype.write = function (str) {
   return true  
 }
 
+//Various stream boilerplate functions
 NullThroughStream.prototype.end = function (str) {
   if ( this._ended ) return
   

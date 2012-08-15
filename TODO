@@ -1,6 +1,10 @@
 Needed by Deadline:
-improve READMEs, to quality level of the better-documented github projects
-video: need some diagrams
+discuss demo webapp (both in main readme and in its dir)
+main readme: core vs non-core modules.
+main readme: 'webapp', logtool vs log-tool
+upper/lower cases in diagram.
+other readmes: misc cleanup
+index name.
 
 Optional by Deadline:
 Start-time / time-offset option for regex parser
@@ -18,3 +22,4 @@ Bug: ValidateOnExit issue in generic stream tests.
 
 Future:
 CLI tool to edit config files?
+Demo app also reads from config files? (to learn channel names, etc.)

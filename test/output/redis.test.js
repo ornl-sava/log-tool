@@ -9,6 +9,6 @@ suite("Stream Specification Tests: redis.js",function(){
       "serverPort"    : 6379,
       "keyPrefix"     : "logtool:store"
     } 
-    streamTests.writableStreamSpec( (new outputModule.module(opts)).stream )
+    streamTests.writableStreamSpec( new outputModule(opts) )
   })
 })

@@ -12,19 +12,9 @@ var Stream = require('stream').Stream
 
 var NullThroughStream = require('./null.js').NullThroughStream
 
-//wrapper, so core.js has consistant interface
-exports.module = function(opts){
-  var self = this;
-  self.stream = new NessusStream (opts)
-  /*
-  self.data = function(opts){
-  }
+module.exports = NessusStream
 
-  self.end = function(opts){
-  }*/
-}
-
-//actual NullThroughStream constructor, which does all actual work
+//actual NessusStream constructor
 function NessusStream (opts) {
   this.writable = true
   this.readable = true
@@ -33,13 +23,14 @@ function NessusStream (opts) {
 
   this._buffer = ''
 
-  //Stream.call(this)
-  NullThroughStream.call(this)
+  Stream.call(this)
+  //NullThroughStream.call(this)
   
   return this
 }
 
-util.inherits(NessusStream, NullThroughStream)
+//util.inherits(NessusStream, NullThroughStream)
+util.inherits(NessusStream, Stream)
 
 // assumes UTF-8
 NessusStream.prototype.write = function (data) {
@@ -148,24 +139,50 @@ NessusStream.prototype.isResult = function(line){
     return(line.split("|")[0] === "results")
 }
 
-/**
- * @param nbe - a string representing the contents of a NBE file.
- * @return - array where each entry is a result from the NBE file.
- */
-/*
-NessusStream.prototype.parseNBEFile = function(nbe){
-    var lines = nbe.split("\n")
-    var currentTime = 0
-    var returnArray = new Array(2)
+//Various stream boilerplate functions
+NessusStream.prototype.end = function (str) {
+  if ( this._ended ) return
+  
+  if ( ! this.writable ) return
+  
+  this._ended = true
+  this.readable = false
+  this.writable = false
+  
+  if ( arguments.length )
+    this.write(str)
 
-    for(var i = 0; i < lines.length; i++){
-        if(isResult(lines[i])){
-            returnArray.push(parseNessusResult(lines[i]))
-        }
-    }
-    return returnArray.filter(function(){return true});//removes nulls
+  this.emit('end')
+  this.emit('close')
 }
-*/
-//module.exports.parseNessusResult = parseNessusResult;
-//module.exports.parseNessusTimeStamp = parseNessusTimeStamp;
-//module.exports.parseNBEFile = parseNBEFile;
+
+NessusStream.prototype.pause = function () {
+  if ( this._paused ) return
+  
+  this._paused = true
+  this.emit('pause')
+}
+
+NessusStream.prototype.resume = function () {
+  if ( this._paused ) {
+    this._paused = false
+    this.emit('drain')
+  }
+}
+
+NessusStream.prototype.destroy = function () {
+  if ( this._destroyed ) return
+  
+  this._destroyed = true
+  this._ended = true
+
+  this.readable = false
+  this.writable = false
+
+  this.emit('end')
+  this.emit('close')
+}
+
+NessusStream.prototype.flush = function () {
+  this.emit('flush')
+}

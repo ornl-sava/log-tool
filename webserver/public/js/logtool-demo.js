@@ -6,7 +6,7 @@
  * - id=""
  */
 
-var channels = ['firewall', 'ids', 'nessus', 'misc']
+var channels = ['firewall', 'ids', 'nessus']//, 'misc']
 var socket
 
 function initConnections() {

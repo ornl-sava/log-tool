@@ -9,17 +9,17 @@
   },
   "firewall-vast12":{
     "module":"file",
-    "fileName":"test/data/firewall-vast12.csv",
+    "fileName":"test/data/firewall-vast12-1m.csv",
     "encoding":"utf-8"
   },
   "ids-vast12":{
     "module":"file",
-    "fileName":"test/data/ids-vast12",
+    "fileName":"test/data/ids-vast12-full",
     "encoding":"utf-8"
   },
   "nessus-example":{
     "module":"file",
-    "fileName":"test/data/test.nbe",
+    "fileName":"test/data/metasploitable.2.0.nbe",
     "encoding":"utf-8"
   },
   "watch.in.txt":{

@@ -14,6 +14,12 @@
     "module":"file",
     "fileName":"ids.out.txt"
   },
+  "misc-pubsub": {
+    "module"        : "redis-pubsub",
+    "serverAddress" : "127.0.0.1",
+    "serverPort"    : 6379,
+    "channel"       : "events.misc"
+  },
   "nessus-pubsub": {
     "module"        : "redis-pubsub",
     "serverAddress" : "127.0.0.1",

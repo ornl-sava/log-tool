@@ -1,10 +1,6 @@
-exports.module = function(opts){
-  var self = this;
-  self.stream = require('fs').createWriteStream('./'+opts.fileName, {encoding:'utf-8'})
+module.exports = FileOutStream
 
-  self.data = function(opts){
-  }
-
-  self.end = function(opts){
-  }
+function FileOutStream(opts){
+  //fake constructor
+  return require('fs').createWriteStream('./'+opts.fileName, {encoding:'utf-8'})
 }

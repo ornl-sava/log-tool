@@ -1,7 +1,8 @@
 # log-tool
 
-`log-tool` is a utility that can read, parse, and write data from log files and similar data sources.  It has a simple modular architecture, consisting of "input modules" to read the data, "parser modules" to format the data as needed, and "output modules" that send this data to some destination.  Each of these modules is stream based, and the configuration of these modules and how they will be connected is specified in several simple configuration files.
+`log-tool` is a utility that can read, parse, and write data from log files and similar data sources.  It has a simple modular architecture, consisting of "input modules" to read the data, "parser modules" to format the data as needed, and "output modules" that send this data to some destination.  Each of these modules is stream based, and the configuration of these modules and the connections between them is specified in several simple configuration files.  This project includes several modules of each of these types, and the modular architecture is intended to make it easy to develop additional modules as needed.  All modules are mutually-compatible, and all of them receive their configuration options in the same way (described below.)
 
+![Logtool](arch.png "Overview of Logtool architecture")
 
 ## Configuration Files
 
@@ -143,6 +144,18 @@ All tests can be run with `mocha -u tdd -R spec`
 
 Any module can be tested individually by also passing the location of its tests, such as `mocha -u tdd -R spec ./test/parsers/regex.test.js`
 
+Note that when testing, the main logtool process and all modules take their options directly from an `opts` argument, and do not read the log files above.
+
 ## Webapp Demo
 
-This project also includes a simple webapp, to demonstrate the use of these various components.  It's super cool.
+This project also includes a simple webapp, to demonstrate the use of these various components. 
+
+To launch this demo:
+
+1. launch redis with `redis-server` (and `flushall` if needed)
+2. from the webserver directory: `node server.js`
+3. visit `localhost:8000` in any modern browser
+4. run logtool (note: if you change the channel names in output.json, you will then also need to modify which channels the webapp demo listens on)
+
+For more information, see ./webserver/README.md
+

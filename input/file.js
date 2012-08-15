@@ -1,10 +1,8 @@
-exports.module = function(opts){
-  var self = this;
-  self.stream = require('fs').createReadStream('./'+opts.fileName, {encoding:'utf-8'})
-  /*
-  self.data = function(opts){
-  }
+module.exports = FileStream
 
-  self.end = function(opts){
-  }*/
+function FileStream(opts){
+  //fake constructor
+  if( !opts.encoding )
+    opts.encoding = 'utf-8'
+  return require('fs').createReadStream('./'+opts.fileName, opts)
 }
