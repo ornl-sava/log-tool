@@ -98,7 +98,6 @@ dbHost = opts.get('host') || DEFAULT_DB_HOST;
 dbPort = opts.get('port') || DEFAULT_DB_PORT;
 user = opts.get('user') || "";
 
-//core.init()
-core.start()
+var instance = new core.LogTool(opts)
 
-//core.stop()
+//instance.stop()

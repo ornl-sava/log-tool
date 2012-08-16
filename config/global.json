@@ -2,10 +2,10 @@
   "environment": "development",
 
   "development": {
-    "env"                     : "Development"
+    "env"      : "Development"
   },
 
   "production": {
-    "env"                     : "Production"
+    "env"      : "Production"
   }
 }
