@@ -100,4 +100,6 @@ user = opts.get('user') || "";
 
 var instance = new core.LogTool(opts)
 
+instance.on('done', process.exit)
+
 //instance.stop()

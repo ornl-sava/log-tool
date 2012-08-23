@@ -86,7 +86,7 @@ RegexStream.prototype.write = function (str) {
   }
   else {
     // just emit the original data
-    self.emit('data', str)
+    self.emit('data', str) //TODO why self?
   }
   
   return true  
@@ -95,7 +95,7 @@ RegexStream.prototype.write = function (str) {
 RegexStream.prototype.end = function (str) {
   if ( this._ended ) return
   
-  if ( ! this.writable ) return
+  if ( ! this.writable ) return //TODO ??
   
   this._ended = true
   this.readable = false
