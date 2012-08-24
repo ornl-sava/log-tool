@@ -25,6 +25,8 @@ function RegexStream (regexConfig) {
   this._paused = this._ended = this._destroyed = false
 
   this._buffer = ''
+
+  this._linecount = 0 //for debugging
   
   // set up static errors
   this._errorBadConfig = new Error(this._appName + ': ' + 'regular expression configuration incorrect.')
@@ -77,8 +79,6 @@ RegexStream.prototype.write = function (str) {
   if ( this._paused ) 
     return false
   
-  var self = this
-
   // parse each line asynchronously and emit the data (or error)
   // TODO - empty funciton here b/c wanted a callback for testing, best if tests listen for events and get rid of the callback
   if ( this._hasRegex ) {
@@ -86,7 +86,7 @@ RegexStream.prototype.write = function (str) {
   }
   else {
     // just emit the original data
-    self.emit('data', str) //TODO why self?
+    this.emit('data', str)
   }
   
   return true  
@@ -97,12 +97,16 @@ RegexStream.prototype.end = function (str) {
   
   if ( ! this.writable ) return //TODO ??
   
+  //NB this always sends a final newline to flush out anything in the buffer.
+  //TODO need to make sure that this matches whatever the needed delimiter is?
+  if ( arguments.length )
+    this.write(str + '\n')
+  else
+    this.write('\n')
+
   this._ended = true
   this.readable = false
   this.writable = false
-  
-  if ( arguments.length )
-    this.write(str)
 
   this.emit('end')
   this.emit('close')
@@ -146,18 +150,20 @@ RegexStream.prototype._parseString = function (data, callback) {
     , error = ''
     , results = []
   
-  // this._buffer has any remainder from the last stream, prepend to the first of lines
-  if ( this._buffer !== '') {
-    data = this._buffer + data
-    this._buffer = '';
-  }
+  //always prepend whatever you have.
+  data = this._buffer + data
+  this._buffer = '';
 
   // split using the delimiter
   lines = data.split(this._delimiter);
 
+  //always save the last item.  the end method will always give us a final newline to flush this out.
+  this._buffer = lines.pop()
+
   // loop through each all of the lines and parse
   var i
   for ( i = 0 ; i < lines.length ; i++ ) {
+    if(lines[i] === "") continue
     try {
       var result = {}
         , label
@@ -170,33 +176,39 @@ RegexStream.prototype._parseString = function (data, callback) {
           
           // if a special field parser has been defined, use it - otherwise append to results
           if ( this._fieldsRegex.hasOwnProperty(label) ) {
-            if ( this._fieldsRegex[label].type === 'moment' )
+            if ( this._fieldsRegex[label].type === 'moment' ){
               result[label] = this._parseMoment(parsed[j], this._fieldsRegex[label].regex)
-            else
+            }else{
+              //console.log('error! ' + error)
               this.emit('error', new Error(this._appName + ': ' + this._fieldsRegex[label].type + ' is not a defined type.'))
+            }
           }
           else {
             result[label] = parsed[j]
           }
         }
-        this.emit('data', result)
-        results.push(result)
+        if(result !== {}){
+          this.emit('data', result)
+          results.push(result)
+        }else{
+          //console.log('error!!!!!!!!!!! ')//TODO debugging
+          error = new Error(this._appName + ': error parsing string\n  Line ' + (this._linecount+i)+ ': ' + lines[i] + '\n  Parser: ' + this._regex + ' result was null')
+          this.emit('error', error)
+        }
       }
       else {
-        error =  new Error(this._appName + ': error parsing string\n  Line: ' + lines[i] + '\n  Parser: ' + this._regex)
+        error =  new Error(this._appName + ': error parsing string\n  Line ' + (this._linecount+i)+ ': ' + lines[i] + '\n  Parser: ' + this._regex)
+        //console.log('error!! ' + error)//TODO debugging
         this.emit('error', error)
       }
     }
     catch (err){
       error = new Error('RegexStream: parsing error - ' + err)
+      //console.log('error!!! ' + error)//TODO debugging
       this.emit('error', error)
     }
   }
-  
-  //TODO can this lead to duplicate events of partial-line, then full-line?
-  // if not at end of file, save this line into this._buffer for next time
-  if ( lines.length > 1 && this.readable )
-    this._buffer = lines.pop()
+  this._linecount += i
 
   callback(error, results)
 }

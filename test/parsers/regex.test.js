@@ -40,9 +40,11 @@ suite('RegEx Parse Tests', function() {
   })
 }) 
 
+//NB! All of these data vals end with newline.  In a real stream, this is not needed, since it is the end() method which will guarantee this instead.
+
 var simpleRegex = function (done) {
   // define the test data
-  var data = '23 45 67\n89 12 34\n56 78 90'
+  var data = '23 45 67\n89 12 34\n56 78 90\n'
 
   // define the regular expression
   var parser = {
@@ -68,16 +70,14 @@ var simpleRegex = function (done) {
 
 var timestampRegex = function (done) {
   // define the test data
-  var data = '2012/07/25 10:00:00+0000: First line\n2012/07/25 14:14:14+0000: Second line\n2012/07/26 07:00:00+0000: Third line\n2012/07/26 07:07:07+0000: Fourth line'
+  var data = '2012/07/25 10:00:00+0000: First line\n2012/07/25 14:14:14+0000: Second line\n2012/07/26 07:00:00+0000: Third line\n2012/07/26 07:07:07+0000: Fourth line\n'
 
   // define the regular expression
   var timeFormatter = "YYYY/MM/DD HH:MM:SS+Z"
   var parser = {
       "regex": "^([\\S\\s]+): ([\\S\\s]+)"
     , "labels": ["timestamp", "line"]
-    , "fields": {
-        "timestamp": {"regex": timeFormatter, "type": "moment"}
-      }
+    , "fields": { "timestamp": {"regex": timeFormatter, "type": "moment"} }
   }
 
   var expected = [
@@ -101,18 +101,16 @@ var firewallRegex = function (done) {
   // define the test data
   var data = '05/Apr/2012 17:56:48,Info,Teardown,ASA-6-302016,UDP,172.23.0.10,193.0.14.129,(empty),(empty),64048,53,domain,outbound,0,1\n'+
     '05/Apr/2012 17:57:00,Info,Teardown,ASA-6-302016,UDP,172.23.0.10,192.203.230.10,(empty),(empty),64048,53,domain,outbound,0,1\n'+
-    '05/Apr/2012 17:58:00,Info,Teardown,ASA-6-302016,UDP,172.23.0.10,192.203.230.10,(empty),(empty),64048,53,domain,outbound,0,1'
+    '05/Apr/2012 17:58:00,Info,Teardown,ASA-6-302016,UDP,172.23.0.10,192.203.230.10,(empty),(empty),64048,53,domain,outbound,0,1\n'
 
   // define the regular expression
   var parser = {
-    "regex": "^([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+)"
+    "regex": "^([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)"
     , "labels": ["timestamp", "priority", "operation", "messageCode", 
                   "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
                   "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"
                 ]
-    , "fields": {
-        "timestamp": {"regex": "DD/MMM/YYYY HH:mm:ss", "type": "moment"}
-      }
+    , "fields": { "timestamp": {"regex": "DD/MMM/YYYY HH:mm:ss", "type": "moment"} }
     //, "timestamp": "DD/MMM/YYYY HH:mm:ss"
     , "delimiter": "\r\n|\n"
     , "startTime":0
@@ -167,7 +165,7 @@ var idsRegex = function (done) {
               '04/05-17:55:00.960174 172.23.1.101:1104 -> 172.23.0.10:139\n'+
               'TCP TTL:128 TOS:0x0 ID:1663 IpLen:20 DgmLen:1500 DF\n'+
               '***A**** Seq: 0x54FEF4C7  Ack: 0x9BEB6342  Win: 0xFF36  TcpLen: 20\n'+
-              '[Xref => http://www.microsoft.com/technet/security/bulletin/MS04-007.mspx][Xref => http://cgi.nessus.org/plugins/dump.php3?id=12065][Xref => http://cgi.nessus.org/plugins/dump.php3?id=12052][Xref => http://cve.mitre.org/cgi-bin/cvename.cgi?name=2003-0818][Xref => http://www.securityfocus.com/bid/9635][Xref => http://www.securityfocus.com/bid/9633]'
+              '[Xref => http://www.microsoft.com/technet/security/bulletin/MS04-007.mspx][Xref => http://cgi.nessus.org/plugins/dump.php3?id=12065][Xref => http://cgi.nessus.org/plugins/dump.php3?id=12052][Xref => http://cve.mitre.org/cgi-bin/cvename.cgi?name=2003-0818][Xref => http://www.securityfocus.com/bid/9635][Xref => http://www.securityfocus.com/bid/9633]\n\n'
 
   // define the regular expression
   var parser = {

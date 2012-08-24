@@ -5,6 +5,14 @@
   "nessus":{
     "module":"nessus"
   },
+  "line-regex":{
+    "module":"regex"
+  , "regex": "^(.*)"
+  , "labels": ["line"]
+  , "fields": {  }
+  , "delimiter": "\r\n|\n"
+  , "startTime":0
+  },
   "firewall":{
     "module":"regex"
   , "regex": "^([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+)"

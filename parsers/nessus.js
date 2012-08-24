@@ -44,13 +44,14 @@ NessusStream.prototype.write = function (data) {
   if ( this._paused ) 
     return false
 
-  // this._buffer has any remainder from the last stream, prepend to the first of lines
-  if ( this._buffer !== '') {
-    data = this._buffer + data
-    this._buffer = '';
-  }
+  //always prepend whatever you have.
+  data = this._buffer + data
+  this._buffer = '';
 
   var lines = data.split( '\n' )
+
+  //always save the last item.  the end method will always give us a final newline to flush this out.
+  this._buffer = lines.pop()
 
   // loop through each all of the lines and parse
   for ( var i = 0 ; i < lines.length ; i++ ) {
@@ -62,14 +63,9 @@ NessusStream.prototype.write = function (data) {
     }
     catch (err){
       var error = new Error('Nessus: parsing error - ' + err)
-      this.emit('data', error)
+      this.emit('error', error)
     }
   }
-  
-  //TODO can this lead to duplicate events of partial-line, then full-line?
-  // if not at end of file, save this line into this._buffer for next time
-  if ( lines.length > 1 && this.readable )
-    this._buffer = lines.pop()
   
   return true  
 }
@@ -145,12 +141,15 @@ NessusStream.prototype.end = function (str) {
   
   if ( ! this.writable ) return
   
+  //NB this always sends a final newline to flush out anything in the buffer.
+  if ( arguments.length )
+    this.write(str + '\n')
+  else
+    this.write('\n')
+
   this._ended = true
   this.readable = false
   this.writable = false
-  
-  if ( arguments.length )
-    this.write(str)
 
   this.emit('end')
   this.emit('close')

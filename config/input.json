@@ -14,7 +14,7 @@
   },
   "ids-vast12":{
     "module":"file",
-    "fileName":"test/data/ids-vast12-full",
+    "fileName":"test/data/ids-vast12",
     "encoding":"utf-8"
   },
   "nessus-example":{
