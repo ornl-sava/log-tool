@@ -1,3 +1,4 @@
+'use strict';
 module.exports = ConsoleStream
 
 function ConsoleStream(opts){

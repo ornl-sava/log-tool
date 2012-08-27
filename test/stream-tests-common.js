@@ -1,3 +1,5 @@
+"use strict";
+
 var spec = require('stream-spec')
 
 var writableStreamSpec = exports.writableStreamSpec = function (stream) {

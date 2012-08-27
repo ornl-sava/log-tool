@@ -83,17 +83,19 @@ NessusStream.prototype.parseNessusResult = function(nessStr){
     var ip = splitNess[2];
     var code = parseFloat(splitNess[4]);
     var holeNote = splitNess[5];
+    var score;
+    var port;
     if(scoreReg.test(nessStr)){
-        var score = parseFloat(scoreReg.exec(nessStr)[1]);
+        score = parseFloat(scoreReg.exec(nessStr)[1]);
     }
     else{
-        var score = 1.0;
+        score = 1.0;
     }
     if(portReg.test(nessStr)){
-        var port = parseFloat(portReg.exec(nessStr)[1]);
+        port = parseFloat(portReg.exec(nessStr)[1]);
     }
     else{
-        var port = 'notes';
+        port = 'notes';
     }
     
     return {"ip": (ip === undefined ? "" : ip),

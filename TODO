@@ -15,7 +15,6 @@ architecture: demo-webserver subscribing to redis pubsub events is somewhat cont
 
 Cleanup:
 Generic stream class(es) which other modules inherit from
-Re-visit the module wrapper class - is it still needed?
 Bug: Data loss when two streams output to one file
 Bug: Some modules leave process idle when finished. their streams do not close when done?
 Bug: ValidateOnExit issue in generic stream tests.

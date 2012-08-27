@@ -1,6 +1,9 @@
+/*global suite:false, test:false*/
+'use strict';
+
 var streamTests = require('../stream-tests-common.js')
 
-var outputModule = require('../../output/redis-pubsub.js')
+var OutputModule = require('../../output/redis-pubsub.js')
 
 suite("Stream Specification Tests: redis-pubsub.js",function(){
   test('should pass stream-spec validation for writable', function( ){
@@ -9,6 +12,6 @@ suite("Stream Specification Tests: redis-pubsub.js",function(){
       "serverPort"    : 6379,
       "channel"       : "events"
     } 
-    streamTests.writableStreamSpec( new outputModule(opts) )
+    streamTests.writableStreamSpec( new OutputModule(opts) )
   })
 })

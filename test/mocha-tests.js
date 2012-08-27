@@ -1,3 +1,6 @@
+/*global suite:true, test:true */
+"use strict";
+
 var assert = require('chai').assert; //like node's assert, but better.
 
 var fs = require('fs')
@@ -75,8 +78,8 @@ suite("Integration Tests",function(){
     ]
     var instance = new core.LogTool(opts)
     var check = function(){
-      var input = fs.readFileSync(opts.inputConfig["infile"].fileName, "utf-8")
-      var result = fs.readFileSync(opts.outputConfig["outfile"].fileName, "utf-8")
+      var input = fs.readFileSync(opts.inputConfig.infile.fileName, "utf-8")
+      var result = fs.readFileSync(opts.outputConfig.outfile.fileName, "utf-8")
       //console.log('input: ' + input)
       //console.log('result: ' + result)
       assert(input)
@@ -157,7 +160,7 @@ suite("Integration Tests",function(){
         "serverAddress" : "127.0.0.1",
         "serverPort"    : 6379,
         "keyPrefix"     : "logtool:events:nessus",
-        "index"         : true,
+        "index"         : true, //Note: this option set to 'true' makes test take significantly longer.
         "indexedFields" : ["ip", "port", "vulnid"]
       }
     }
@@ -229,17 +232,17 @@ suite("Integration Tests",function(){
         "serverAddress" : "127.0.0.1",
         "serverPort"    : 6379,
         "keyPrefix"     : "logtool:events:firewall",
-        "index"         : false, //true
+        "index"         : true, //Note: this option set to 'true' makes test take significantly longer.
         "indexedFields" : ["direction", "operation", "priority", "protocol", "sourceIP", "destIP", "sourcePort", "destPort"]
       }
     }
     opts.parserConfig = {
       "firewall":{
         "module":"regex"
-      , "regex": "^([^,]*),([^,]*)"//,([^,]+),([^,]+)"//,([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)"
-      , "labels": ["timestamp", "priority"//, "operation", "messageCode", 
-                    //"protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
-                    //"destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"
+      , "regex": "^([^,]*),([^,]*),([^,]+),([^,]+),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)"
+      , "labels": ["timestamp", "priority", "operation", "messageCode", 
+                    "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
+                    "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"
                   ]
       , "fields": { "timestamp": {"regex": "DD/MMM/YYYY HH:mm:ss", "type": "moment"} }
       , "delimiter": "\r\n|\n"

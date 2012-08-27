@@ -1,7 +1,7 @@
 {
-    "name": "log-parser"
+    "name": "logtool"
   , "version": "0.0.1"
-  , "description": "Log parser"
+  , "description": "Log tool"
   , "author": {
       "name":"John Goodall"
     , "email":"jgoodall@ornl.gov"
@@ -10,6 +10,10 @@
       {
         "name": "John Goodall"
       , "email": "jgoodall@gmail.com"
+      },
+      {
+        "name": "Mike Iannacone"
+      , "email": "mike.iannacone@gmail.com"
       }
     ]
   , "dist-tags": { "latest": "0.0.1" }
@@ -24,8 +28,14 @@
       "lib": "./lib"
     , "bin": "./bin"
     }
-  , "main": "./lib/log-parser.js"
-  , "bin": "./bin/log-parser.js"
+  , "main": "./logtool.js"
+  , "bin": "./bin/core.js"
+  , "scripts": {
+      "start": "./scripts/start.sh"
+    , "stop": "./scripts/stop.sh"
+    , "restart": "./scripts/stop.sh; ./scripts/start.sh"
+    , "test": "./scripts/test.sh"
+    }
   , "dependencies": {
       "async": ">0.1"
     , "lodash": ">0.2"
@@ -40,14 +50,14 @@
   }
   , "devDependencies": {
       "mocha": ">=0.14"
-    , "should": ">=0.6"
     , "chai": ">=0.5"
     , "stream-spec": ">=0.3"
+    , "jshint": ">=0.6"
   }
   , "repository": {
       "type": "git"
     , "url": ""
   }
   , "keywords": ["log", "parser", "sensor"]
-  , "engines": { "node": ">= 0.6.0 < 0.7.0" }
+  , "engines": { "node": ">= 0.6.0 < 0.9.0" }
 }

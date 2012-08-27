@@ -1,3 +1,6 @@
+/*global suite:false, test:false*/
+'use strict';
+
 var assert = require('chai').assert;
 var streamTests = require('../stream-tests-common.js')
 
@@ -29,10 +32,10 @@ suite('Nessus Parse Tests', function(){
     var obj = nessusStream.parseNessusResult(data)
     //console.log(JSON.stringify(obj))
     //assert(obj["port"] === -1)
-    assert(obj["ip"] === "127.0.0.1")
-    assert(obj["vulntype"] === "note" || obj["vulntype"] === "Security Note")
-    assert(obj["vulnid"] === 19506)
-    assert(obj["cvss"] === 1 || obj["cvss"] === 0)
+    assert(obj.ip === "127.0.0.1")
+    assert(obj.vulntype === "note" || obj.vulntype === "Security Note")
+    assert(obj.vulnid === 19506)
+    assert(obj.cvss === 1 || obj.cvss === 0)
     done()
   });
 
@@ -42,10 +45,10 @@ suite('Nessus Parse Tests', function(){
     var obj = nessusStream.parseNessusResult(data)
     //console.log(JSON.stringify(obj))
     //assert(obj["port"] === -1)
-    assert(obj["ip"] === "192.168.2.99")
-    assert(obj["vulntype"] === "note" || obj["vulntype"] === "Security Note")
-    assert(obj["vulnid"] === 10180)
-    assert(obj["cvss"] === 1 || obj["cvss"] === 0)
+    assert(obj.ip === "192.168.2.99")
+    assert(obj.vulntype === "note" || obj.vulntype === "Security Note")
+    assert(obj.vulnid === 10180)
+    assert(obj.cvss === 1 || obj.cvss === 0)
     done()
   });
 
@@ -54,11 +57,11 @@ suite('Nessus Parse Tests', function(){
     var nessusStream = new NessusStream()
     var obj = nessusStream.parseNessusResult(data)
     //console.log(JSON.stringify(obj))
-    assert(obj["port"] === 445)
-    assert(obj["ip"] === "192.168.2.175")
-    assert(obj["vulntype"] === "hole" || obj["vulntype"] === "Security Hole")
-    assert(obj["vulnid"] === 49958)
-    assert(obj["cvss"] === 9.3)
+    assert(obj.port === 445)
+    assert(obj.ip === "192.168.2.175")
+    assert(obj.vulntype === "hole" || obj.vulntype === "Security Hole")
+    assert(obj.vulnid === 49958)
+    assert(obj.cvss === 9.3)
     done()
   });
 
@@ -67,11 +70,11 @@ suite('Nessus Parse Tests', function(){
     var nessusStream = new NessusStream()
     var obj = nessusStream.parseNessusResult(data)
     //console.log(JSON.stringify(obj))
-    assert(obj["port"] === 445)
-    assert(obj["ip"] === "192.168.2.175")
-    assert(obj["vulntype"] === "")
-    assert(obj["vulnid"] === 0)
-    assert(obj["cvss"] === 1 || obj["cvss"] === 0)
+    assert(obj.port === 445)
+    assert(obj.ip === "192.168.2.175")
+    assert(obj.vulntype === "")
+    assert(obj.vulnid === 0)
+    assert(obj.cvss === 1 || obj.cvss === 0)
     done()
   });
 

@@ -1,3 +1,5 @@
+"use strict";
+
 // Import opts command line options parser module
 //  https://bitbucket.org/mazzarelli/js-opts/wiki/Home
 var opts = require('opts');
@@ -26,6 +28,7 @@ var dbName;
 var dbHost;
 var dbPort;
 
+/*
 var options = [
   { short       : 'v'
   , long        : 'version'
@@ -69,7 +72,7 @@ var options = [
   , description : 'The port of redis instance  (default:  ' + DEFAULT_DB_PORT + ')'
   , value       : true
   , callback    : function (value) {
-        if( isNaN( parseInt(value) ) ) {
+        if( isNaN( parseInt(value, 10) ) ) {
             common.logger.error('Port ' + value + ' is invalid.');
             process.exit(1);
         }
@@ -97,8 +100,10 @@ dbName = opts.get('name') || DEFAULT_DB_NAME;
 dbHost = opts.get('host') || DEFAULT_DB_HOST;
 dbPort = opts.get('port') || DEFAULT_DB_PORT;
 user = opts.get('user') || "";
+*/
 
-var instance = new core.LogTool(opts)
+//var instance = new core.LogTool(opts)
+var instance = new core.LogTool()
 
 instance.on('done', process.exit) //TODO best way to do this?  How come it sometime exists without needing this (eg. for file streams)?
 

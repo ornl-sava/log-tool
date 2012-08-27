@@ -1,3 +1,6 @@
+/*global suite:false, test:false*/
+'use strict';
+
 var assert = require('chai').assert
   , moment = require('moment')
 var streamTests = require('../stream-tests-common.js')
