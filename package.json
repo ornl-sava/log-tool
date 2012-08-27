@@ -47,6 +47,7 @@
     , "reds": ">=0.1.4"
     , "hiredis": ">0.1"
     , "winston": ">0.6"
+    , "forever": ">=0.10"
   }
   , "devDependencies": {
       "mocha": ">=0.14"

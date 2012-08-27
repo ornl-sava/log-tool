@@ -4,6 +4,7 @@
 PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export PATH
 
+echo 'running jshint on everything ...'
 jshint *.js
 jshint ./lib/*.js
 jshint ./input/*.js
@@ -13,5 +14,6 @@ jshint ./test/*.js
 jshint ./test/input/*.js
 jshint ./test/output/*.js
 jshint ./test/parsers/*.js
+echo 'done with jshint!'
 
 mocha -u tdd -R spec -t 10000
