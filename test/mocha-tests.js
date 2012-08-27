@@ -11,7 +11,7 @@ var fs = require('fs')
 function log(message) {
   console.log(message)
 }
-/*
+
 suite("Testing input modules",function(){
   //kind of strange that here '.' is proj root dir, but below it is test dir ...
   var files = fs.readdirSync('./test/input') 
@@ -19,7 +19,6 @@ suite("Testing input modules",function(){
     require('./input/' + files[i])
   }
 });
-*/
 
 suite("Testing output modules",function(){
   var files = fs.readdirSync('./test/output')
@@ -192,8 +191,9 @@ suite("Integration Tests",function(){
         var check = function(){
           client.keys("logtool:events:nessus:*", function (err, replies) {
             assert(!err)
-            assert(replies.length === 132)
-            client.get("logtool:events:nessus:100", function(err, reply){
+            //console.log('got ' + replies.length + ' replies')
+            assert(replies.length === 136)
+            client.get("logtool:events:nessus:102", function(err, reply){
               assert(!err)
               assert(reply === "{\"ip\":\"172.16.247.129\",\"vulnid\":11219,\"vulntype\":\"note\",\"cvss\":1,\"value\":1,\"port\":3632}")
               done()
@@ -255,14 +255,14 @@ suite("Integration Tests",function(){
       }
     }
     opts.connectionConfig = [
-      /*{
-        "input":"firewall-vast12",
-        "parser":"firewall",
-        "output":"fw-pubsub"
-      },*/
+      //{
+      //  "input":"firewall-vast12",
+      //  "parser":"firewall",
+      //  "output":"fw-pubsub"
+      //},
       {
         "input":"firewall-vast12",
-        "parser":/*"line-regex",*/"firewall",
+        "parser":"firewall",
         "output":"fw-store"
       }
     ]

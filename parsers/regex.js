@@ -66,30 +66,114 @@ function RegexStream (regexConfig) {
 util.inherits(RegexStream, Stream)
 
 
-
 // assumes UTF-8
-RegexStream.prototype.write = function (str) {
+RegexStream.prototype.write = function (data) {
   // cannot write to a stream after it has ended
   if ( this._ended ) 
-    throw this._errorWriteAfterEnd
+    throw new Error('RegexStream: write after end')
 
   if ( ! this.writable ) 
-    throw this._errorUnwritable
+    throw new Error('RegexStream: not a writable stream')
   
   if ( this._paused ) 
     return false
-  
-  // parse each line asynchronously and emit the data (or error)
-  // TODO - empty funciton here b/c wanted a callback for testing, best if tests listen for events and get rid of the callback
-  if ( this._hasRegex ) {
-    this._parseString(str, function() {}) 
-  }
-  else {
-    // just emit the original data
-    this.emit('data', str)
+
+  //always prepend whatever you have.
+  data = this._buffer + data
+  this._buffer = '';
+
+  var lines = data.split(this._delimiter);
+
+  //always save the last item.  the end method will always give us a final newline to flush this out.
+  this._buffer = lines.pop()
+
+  // loop through each all of the lines and parse
+  for ( var i = 0 ; i < lines.length ; i++ ) {
+    if(lines[i] !== ""){
+      try {
+        // parse each line and emit the data (or error)
+        if ( this._hasRegex ) {
+          var result = this._parseString(lines[i])
+          //console.log( 'got a result of: ' + JSON.stringify(result))
+          this.emit('data', result)
+        }else{
+          // just emit the original data
+          this.emit('data', lines[i])
+        }
+      }catch (err){
+        //console.log('some error emitted for some reason: ' + err)
+        var error = new Error('RegexStream: parsing error - ' + err)
+        this.emit('error', error)
+      }
+    }
+    this._linecount += 1
   }
   
   return true  
+}
+
+// callback is just used for testing.  throws whatever errors it wants.
+RegexStream.prototype._parseString = function (data) {
+  var result = {}
+  var error = ""
+  var label
+  var j
+  var parsed
+
+  parsed = this._regex.exec(data)
+
+  for ( j = 1 ; j < parsed.length ; j++ ) {
+    label = this._labels[j - 1]
+    
+    // if a special field parser has been defined, use it - otherwise append to result
+    if ( this._fieldsRegex.hasOwnProperty(label) ) {
+      if ( this._fieldsRegex[label].type === 'moment' ){
+        result[label] = this._parseMoment(parsed[j], this._fieldsRegex[label].regex)
+      }else{
+        //console.log('error! ' + error)//TODO debugging
+        throw new Error(this._appName + ': ' + this._fieldsRegex[label].type + ' is not a defined type.')
+      }
+    }
+    else {
+      result[label] = parsed[j]
+    }
+  }
+
+  if( result === {}){
+    //console.log('error!!!!!!!!!!! ')//TODO debugging
+    throw new Error(this._appName + ': error parsing string\n  Line ' + this._linecount + ': ' + data + '\n  Parser: ' + this._regex + ' result was null')
+  }
+
+  return result
+}
+
+// Uses [Moment.js](http://momentjs.com/) to parse a string into a timestamp
+// @return {Number} timestamp The number of *milliseconds* since the Unix Epoch
+RegexStream.prototype._parseMoment = function (string, formatter) {
+
+  // set to UTC by adding '+0000' to input string and 'ZZ' to format string
+  //TODO regex below won't work if you specify a non-UTC time in incoming regex?
+  if (! formatter.match(/\+Z+/) ) {
+    string = string + '+0000'
+    formatter = formatter + 'ZZ'
+  }
+
+  try {
+    // parse using the formatter for moment
+    var timestamp = moment(string, formatter)
+
+    // if there is no year in the timestamp regex set it to this year
+    if (! formatter.match(/YY/))
+      timestamp.year(moment().year())
+
+    return timestamp.valueOf()
+    
+  }
+  catch (err) {
+    this.emit('error', new Error(this._appName + ': Timestamp parsing error. ' + err))
+  }
+
+  return false
 }
 
 RegexStream.prototype.end = function (str) {
@@ -97,12 +181,16 @@ RegexStream.prototype.end = function (str) {
   
   if ( ! this.writable ) return //TODO ??
   
-  //NB this always sends a final newline to flush out anything in the buffer.
-  //TODO need to make sure that this matches whatever the needed delimiter is?
-  if ( arguments.length )
-    this.write(str + '\n')
-  else
-    this.write('\n')
+  if ( arguments.length ){
+    this.write(str)
+  }
+
+  //since we're done, presumably this is a single, complete item remaining in the buffer, so handle it.
+  if(this._buffer !== ""){
+    var result = this._parseString(this._buffer)
+    this._buffer = ''
+    this.emit('data', result)
+  }
 
   this._ended = true
   this.readable = false
@@ -141,103 +229,4 @@ RegexStream.prototype.destroy = function () {
 
 RegexStream.prototype.flush = function () {
   this.emit('flush')
-}
-
-
-// callback is just used for testing
-RegexStream.prototype._parseString = function (data, callback) {
-  var lines = []
-    , error = ''
-    , results = []
-  
-  //always prepend whatever you have.
-  data = this._buffer + data
-  this._buffer = '';
-
-  // split using the delimiter
-  lines = data.split(this._delimiter);
-
-  //always save the last item.  the end method will always give us a final newline to flush this out.
-  this._buffer = lines.pop()
-
-  // loop through each all of the lines and parse
-  var i
-  for ( i = 0 ; i < lines.length ; i++ ) {
-    if(lines[i] === "") continue
-    try {
-      var result = {}
-        , label
-        , j
-      var parsed = this._regex.exec(lines[i])
-      if (parsed) {
-        for ( j = 1 ; j < parsed.length ; j++ ) {
-          
-          label = this._labels[j - 1]
-          
-          // if a special field parser has been defined, use it - otherwise append to results
-          if ( this._fieldsRegex.hasOwnProperty(label) ) {
-            if ( this._fieldsRegex[label].type === 'moment' ){
-              result[label] = this._parseMoment(parsed[j], this._fieldsRegex[label].regex)
-            }else{
-              //console.log('error! ' + error)
-              this.emit('error', new Error(this._appName + ': ' + this._fieldsRegex[label].type + ' is not a defined type.'))
-            }
-          }
-          else {
-            result[label] = parsed[j]
-          }
-        }
-        if(result !== {}){
-          this.emit('data', result)
-          results.push(result)
-        }else{
-          //console.log('error!!!!!!!!!!! ')//TODO debugging
-          error = new Error(this._appName + ': error parsing string\n  Line ' + (this._linecount+i)+ ': ' + lines[i] + '\n  Parser: ' + this._regex + ' result was null')
-          this.emit('error', error)
-        }
-      }
-      else {
-        error =  new Error(this._appName + ': error parsing string\n  Line ' + (this._linecount+i)+ ': ' + lines[i] + '\n  Parser: ' + this._regex)
-        //console.log('error!! ' + error)//TODO debugging
-        this.emit('error', error)
-      }
-    }
-    catch (err){
-      error = new Error('RegexStream: parsing error - ' + err)
-      //console.log('error!!! ' + error)//TODO debugging
-      this.emit('error', error)
-    }
-  }
-  this._linecount += i
-
-  callback(error, results)
-}
-
-// Uses [Moment.js](http://momentjs.com/) to parse a string into a timestamp
-// @return {Number} timestamp The number of *milliseconds* since the Unix Epoch
-RegexStream.prototype._parseMoment = function (string, formatter) {
-
-  // set to UTC by adding '+0000' to input string and 'ZZ' to format string
-  //TODO regex below won't work if you specify a non-UTC time in incoming regex?
-  if (! formatter.match(/\+Z+/) ) {
-    string = string + '+0000'
-    formatter = formatter + 'ZZ'
-  }
-
-  try {
-    // parse using the formatter for moment
-    var timestamp = moment(string, formatter)
-
-    // if there is no year in the timestamp regex set it to this year
-    if (! formatter.match(/YY/))
-      timestamp.year(moment().year())
-
-    return timestamp.valueOf()
-    
-  }
-  catch (err) {
-    this.emit('error', new Error(this._appName + ': Timestamp parsing error. ' + err))
-  }
-
-  return false
 }

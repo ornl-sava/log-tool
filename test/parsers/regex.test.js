@@ -7,17 +7,17 @@ var RegexStream = require('../../parsers/regex.js')
 suite('Stream Specification Tests: regex.js', function() {
 
   test('should pass stream-spec validation for through', function(){
-    streamTests.throughStreamSpec( new RegexStream() )
+    streamTests.throughStreamSpec( new RegexStream({"regex": ".*"}) )
   })
 
   test('should pass stream-spec validation for writable', function(){
-    streamTests.writableStreamSpec( new RegexStream() )
+    streamTests.writableStreamSpec( new RegexStream({"regex": ".*"}) )
   })
 
   //TODO why won't this pass?
 /*
   test('should pass stream-spec validation for readable', function(){
-    streamTests.readableStreamSpec( new RegexStream() )
+    streamTests.readableStreamSpec( new RegexStream({"regex": ".*"}) )
   })
 */
 })
@@ -38,6 +38,7 @@ suite('RegEx Parse Tests', function() {
   test('should parse ids entries (snort format)', function( done ){
     idsRegex( done )
   })
+
 }) 
 
 //NB! All of these data vals end with newline.  In a real stream, this is not needed, since it is the end() method which will guarantee this instead.
@@ -60,12 +61,20 @@ var simpleRegex = function (done) {
   ]
 
   var regexStream = new RegexStream(parser)
-  regexStream._parseString(data, function(err, out) {
-    if ( err )
-      throw err
-    assert.deepEqual(out, expected)
+  var result = []
+
+  regexStream.on('data', function(data) {
+    result.push(data)
+  })
+
+  regexStream.on('end', function() {
+    assert.deepEqual(result, expected)
     done()
   })
+
+  regexStream.write(data)
+  regexStream.end()
+
 }
 
 var timestampRegex = function (done) {
@@ -88,12 +97,19 @@ var timestampRegex = function (done) {
   ]
 
   var regexStream = new RegexStream(parser)
-  regexStream._parseString(data, function(err, out) {
-    if ( err )
-      throw err
-    assert.deepEqual(out, expected)
+  var result = []
+
+  regexStream.on('data', function(data) {
+    result.push(data)
+  })
+
+  regexStream.on('end', function() {
+    assert.deepEqual(result, expected)
     done()
   })
+
+  regexStream.write(data)
+  regexStream.end()
   
 }
 
@@ -138,12 +154,19 @@ var firewallRegex = function (done) {
   ]
 
   var regexStream = new RegexStream(parser)
-  regexStream._parseString(data, function(err, out) {
-    if ( err )
-      throw err
-    assert.deepEqual(out, expected)
+  var result = []
+
+  regexStream.on('data', function(data) {
+    result.push(data)
+  })
+
+  regexStream.on('end', function() {
+    assert.deepEqual(result, expected)
     done()
   })
+
+  regexStream.write(data)
+  regexStream.end()
 }
 
 var idsRegex = function (done) {
@@ -186,10 +209,17 @@ var idsRegex = function (done) {
   ]
 
   var regexStream = new RegexStream(parser)
-  regexStream._parseString(data, function(err, out) {
-    if ( err )
-      throw err
-    assert.deepEqual(out, expected)
+  var result = []
+
+  regexStream.on('data', function(data) {
+    result.push(data)
+  })
+
+  regexStream.on('end', function() {
+    assert.deepEqual(result, expected)
     done()
   })
+
+  regexStream.write(data)
+  regexStream.end()
 }

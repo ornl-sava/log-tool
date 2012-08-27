@@ -141,11 +141,16 @@ NessusStream.prototype.end = function (str) {
   
   if ( ! this.writable ) return
   
-  //NB this always sends a final newline to flush out anything in the buffer.
-  if ( arguments.length )
-    this.write(str + '\n')
-  else
-    this.write('\n')
+  if ( arguments.length ){
+    this.write(str)
+  }
+
+  //since we're done, presumably this is a single, complete item remaining in the buffer, so handle it.
+  if(this._buffer !== ""){
+    var result = this.parseNessusResult(this._buffer)
+    this._buffer = ''
+    this.emit('data', result)
+  }
 
   this._ended = true
   this.readable = false
