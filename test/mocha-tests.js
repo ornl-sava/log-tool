@@ -198,7 +198,7 @@ suite("Integration Tests",function(){
             assert(replies.length === 136)
             client.get("logtool:events:nessus:102", function(err, reply){
               assert(!err)
-              assert(reply === "{\"ip\":\"172.16.247.129\",\"vulnid\":11219,\"vulntype\":\"note\",\"cvss\":1,\"value\":1,\"port\":3632}")
+              assert(reply === "{\"ip\":\"172.16.247.129\",\"vulnid\":11219,\"vulntype\":\"note\",\"cvss\":0,\"value\":1,\"port\":3632}")
               done()
             })
           })
@@ -279,13 +279,13 @@ suite("Integration Tests",function(){
         //assert(!err)
         var instance = new core.LogTool(opts)
 
-        var check = function(){
+        var check = function(){ //TODO
           client.keys("logtool:events:nessus:*", function (err, replies) {
             assert(!err)
             //assert(replies.length === 139)
             client.get("logtool:events:nessus:100", function(err, reply){
               //assert(!err)
-              //assert(reply === "{\"ip\":\"172.16.247.129\",\"vulnid\":53335,\"vulntype\":\"note\",\"cvss\":1,\"value\":1,\"port\":111}")
+              //assert(reply === "{\"ip\":\"172.16.247.129\",\"vulnid\":53335,\"vulntype\":\"note\",\"cvss\":0,\"value\":1,\"port\":111}")
               done()
             })
           })

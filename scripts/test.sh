@@ -15,5 +15,18 @@ jshint ./test/input/*.js
 jshint ./test/output/*.js
 jshint ./test/parsers/*.js
 echo 'done with jshint!'
+echo ''
 
-mocha -u tdd -R spec -t 10000
+echo 'running console input/output tests ...'
+echo '' > out.txt
+cat in.txt | node ./test/stdinTest.js
+diff in.txt out.txt
+
+echo '' > out.txt
+node ./test/stdoutTest.js > out.txt
+diff in.txt out.txt
+echo 'done!'
+echo ''
+
+echo 'running mocha tests ...'
+mocha -u tdd -R spec -t 10000 ./test/mocha-tests.js

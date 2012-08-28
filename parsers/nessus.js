@@ -48,7 +48,7 @@ NessusStream.prototype.write = function (data) {
   data = this._buffer + data
   this._buffer = '';
 
-  var lines = data.split( '\n' )
+  var lines = data.split(  /\n/  )
 
   //always save the last item.  the end method will always give us a final newline to flush this out.
   this._buffer = lines.pop()
@@ -76,7 +76,7 @@ NessusStream.prototype.write = function (data) {
  * @return - structure containing the ip, vulnid, vulntype, cvss and port
  */
 NessusStream.prototype.parseNessusResult = function(nessStr){
-    var scoreReg = /CVSS Base Score : (\d+\.\d+)/;
+    var scoreReg = new RegExp("CVSS Base Score : (\\d+\\.\\d+)");
 
     var portReg = /\D+ \((\d{1,7})\D+\)/;
     var splitNess = nessStr.split("|");
@@ -89,7 +89,7 @@ NessusStream.prototype.parseNessusResult = function(nessStr){
         score = parseFloat(scoreReg.exec(nessStr)[1]);
     }
     else{
-        score = 1.0;
+        score = 0;//1.0;
     }
     if(portReg.test(nessStr)){
         port = parseFloat(portReg.exec(nessStr)[1]);

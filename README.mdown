@@ -4,6 +4,13 @@
 
 ![Logtool](arch.png "Overview of Logtool architecture")
 
+## Usage Summary
+
+`npm start` to start the service (with the settings specified in the config files)
+`npm stop` to stop the service
+`npm restart` to restart the service
+`npm test` to run the tests.
+
 ## Configuration Files
 
 All of the following are json files located in the `config` directory.
@@ -90,7 +97,7 @@ Like above, this config file names specific instances using their specified modu
       },
       "firewall":{
         "module":"regex"
-      , "regex": "^([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+),([\\s\\S]+)"
+      , "regex": "^([^,]*),([^,]*),([^,]+),([^,]+),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)"
       , "labels": ["timestamp", "priority", "operation", "messageCode", 
                     "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
                     "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"
@@ -140,11 +147,11 @@ lib directory - contains all core libraries for logtool (ie. everything except f
 
 ## Testing
 
-All tests can be run with `mocha -u tdd -R spec`  
+All tests can be run with `npm test`  This will run jshint and the mocha tests.
 
-Any module can be tested individually by also passing the location of its tests, such as `mocha -u tdd -R spec ./test/parsers/regex.test.js`
+Any module can be tested individually with mocha by passing the location of its tests, such as `mocha -u tdd -R spec ./test/parsers/regex.test.js`
 
-Note that when testing, the main logtool process and all modules take their options directly from an `opts` argument, and do not read the log files above.
+Note that when testing, the main logtool process and all modules take their options directly from an `opts` argument, and do not read or modify the log files above.
 
 ## Webapp Demo
 
