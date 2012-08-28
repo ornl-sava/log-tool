@@ -232,7 +232,7 @@ suite("Integration Tests",function(){
         "serverAddress" : "127.0.0.1",
         "serverPort"    : 6379,
         "keyPrefix"     : "logtool:events:firewall",
-        "index"         : true, //Note: this option set to 'true' makes test take significantly longer.
+        "index"         : false, //Note: this option set to 'true' makes test take significantly longer. (~10x longer?) also, it was tested above.
         "indexedFields" : ["direction", "operation", "priority", "protocol", "sourceIP", "destIP", "sourcePort", "destPort"]
       }
     }
@@ -275,24 +275,24 @@ suite("Integration Tests",function(){
     var client = redis.createClient(opts.outputConfig['fw-store'].serverPort, opts.outputConfig['fw-store'].serverAddress, redisOpts)
 
     client.on('ready', function(){
-      //client.flushall( function (err) { 
-        //assert(!err)
+      client.flushall( function (err) { 
+        assert(!err)
         var instance = new core.LogTool(opts)
 
-        var check = function(){ //TODO
-          client.keys("logtool:events:nessus:*", function (err, replies) {
+        var check = function(){ 
+          client.keys("logtool:events:firewall:*", function (err, replies) {
             assert(!err)
-            //assert(replies.length === 139)
-            client.get("logtool:events:nessus:100", function(err, reply){
-              //assert(!err)
-              //assert(reply === "{\"ip\":\"172.16.247.129\",\"vulnid\":53335,\"vulntype\":\"note\",\"cvss\":0,\"value\":1,\"port\":111}")
+            assert(replies.length === 1464)
+            client.get("logtool:events:firewall:1000", function(err, reply){
+              assert(!err)
+              assert(reply === "{\"timestamp\":1333732841000,\"priority\":\"Info\",\"operation\":\"Teardown\",\"messageCode\":\"ASA-6-302014\",\"protocol\":\"TCP\",\"sourceIP\":\"172.23.239.88\",\"destIP\":\"10.32.5.59\",\"sourceHostname\":\"(empty)\",\"destHostname\":\"(empty)\",\"sourcePort\":\"48999\",\"destPort\":\"6667\",\"destService\":\"6667_tcp\",\"direction\":\"outbound\",\"connectionsBuilt\":\"0\",\"connectionsTornDown\":\"1\"}")
               done()
             })
           })
         }
         instance.on("done", function(){ setTimeout(check, 20) }); //otherwise we might check before LogTool's queue to redis has emptied
 
-      //})
+      })
     })
   })
 
