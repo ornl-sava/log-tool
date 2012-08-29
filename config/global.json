@@ -2,10 +2,20 @@
   "environment": "development",
 
   "development": {
-    "env"      : "Development"
+    "logOpts": {
+      "useConsole"      : true,
+      "consoleOpts"     : { "level" : "warning", "colorize" : true },
+      "useFile"         : true,
+      "fileOpts"        : { "level" : "debug", "filename" : "./error.log" }
+    }
   },
 
   "production": {
-    "env"      : "Production"
+    "logOpts": {
+      "useConsole"      : true,
+      "consoleOpts"     : { "level" : "warning", "colorize" : true },
+      "useFile"         : true,
+      "fileOpts"        : { "level" : "info", "filename" : "./error.log" }
+    }
   }
 }
