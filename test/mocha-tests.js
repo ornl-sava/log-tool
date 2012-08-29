@@ -48,7 +48,7 @@ suite("Integration Tests",function(){
     instance.on("done", done);
   })
   
-  test('should copy one file to another', function( done ){
+  test('copy one file to another', function( done ){
     var opts = {}
     opts.inputConfig = {
       "infile":{
@@ -90,7 +90,7 @@ suite("Integration Tests",function(){
     instance.on("done", check);
   })
 
-  test('should read a file, use regex parser to break up its lines', function( done ){
+  test('read a file, use regex parser to break up its lines', function( done ){
     var opts = {}
     opts.inputConfig = {
       "in.txt":{
@@ -138,7 +138,7 @@ suite("Integration Tests",function(){
   })
 
   //TODO move this test to appropriate module later
-  test('should parse nessus file and populate redis', function( done ){
+  test('parse nessus file and populate redis', function( done ){
     var opts = {}
     opts.inputConfig = {
       "nessus-example":{
@@ -210,14 +210,14 @@ suite("Integration Tests",function(){
   })
 
   //TODO move this test to appropriate module later
-  test('should parse firewall file w regex module, and then populate redis', function( done ){
+  test('parse firewall file w regex module, and then populate redis', function( done ){
     var opts = {}
     opts.inputConfig = {
       "firewall-vast12":{
         "module":"file",
         "fileName":"test/data/firewall-vast12-1m.csv",
         "encoding":"utf-8",
-        "bufferSize": 1024 *16 // 1024*64 is default.
+        "bufferSize": 1024 *12 // 1024*64 is default.
       }
     }
     opts.outputConfig = {
@@ -247,6 +247,7 @@ suite("Integration Tests",function(){
       , "fields": { "timestamp": {"regex": "DD/MMM/YYYY HH:mm:ss", "type": "moment"} }
       , "delimiter": "\r\n|\n"
       , "startTime":0
+      , "endTime":2147483648 //The upper limit of 2147483648 doesn't really apply to javascript numbers, just convenient to use.
       },
       "line-regex":{
         "module":"regex"
@@ -286,6 +287,95 @@ suite("Integration Tests",function(){
             client.get("logtool:events:firewall:1000", function(err, reply){
               assert(!err)
               assert(reply === "{\"timestamp\":1333732841000,\"priority\":\"Info\",\"operation\":\"Teardown\",\"messageCode\":\"ASA-6-302014\",\"protocol\":\"TCP\",\"sourceIP\":\"172.23.239.88\",\"destIP\":\"10.32.5.59\",\"sourceHostname\":\"(empty)\",\"destHostname\":\"(empty)\",\"sourcePort\":\"48999\",\"destPort\":\"6667\",\"destService\":\"6667_tcp\",\"direction\":\"outbound\",\"connectionsBuilt\":\"0\",\"connectionsTornDown\":\"1\"}")
+              done()
+            })
+          })
+        }
+        instance.on("done", function(){ setTimeout(check, 20) }); //otherwise we might check before LogTool's queue to redis has emptied
+
+      })
+    })
+  })
+
+  //TODO move this test to appropriate module later
+  test('parse time slice of firewall file w regex module, populate redis', function( done ){
+    var opts = {}
+    opts.inputConfig = {
+      "firewall-vast12":{
+        "module":"file",
+        "fileName":"test/data/firewall-vast12-1m.csv",
+        "encoding":"utf-8",
+        "bufferSize": 1024 *16 // 1024*64 is default.
+      }
+    }
+    opts.outputConfig = {
+      "fw-pubsub": {
+        "module"        : "redis-pubsub",
+        "serverAddress" : "127.0.0.1",
+        "serverPort"    : 6379,
+        "channel"       : "events.firewall"
+      },
+      "fw-store": {
+        "module"        : "redis",
+        "serverAddress" : "127.0.0.1",
+        "serverPort"    : 6379,
+        "keyPrefix"     : "logtool:events:firewall",
+        "index"         : false, //Note: this option set to 'true' makes test take significantly longer. (~10x longer?) also, it was tested above.
+        "indexedFields" : ["direction", "operation", "priority", "protocol", "sourceIP", "destIP", "sourcePort", "destPort"]
+      }
+    }
+    opts.parserConfig = {
+      "firewall":{
+        "module":"regex"
+      , "regex": "^([^,]*),([^,]*),([^,]+),([^,]+),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)"
+      , "labels": ["timestamp", "priority", "operation", "messageCode", 
+                    "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
+                    "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"
+                  ]
+      , "fields": { "timestamp": {"regex": "DD/MMM/YYYY HH:mm:ss", "type": "moment"} }
+      , "delimiter": "\r\n|\n"
+      , "startTime":1333732843 //this range is totally arbitrary, just wanted a small window not covering the start or end of log entries.
+      , "endTime":1333732845 
+      },
+      "line-regex":{
+        "module":"regex"
+      , "regex": "^([^,]+).*"
+      , "labels": ["line"]
+      , "fields": {  }
+      , "delimiter": "\r\n|\n"
+      , "startTime":0
+      }
+    }
+    opts.connectionConfig = [
+      //{
+      //  "input":"firewall-vast12",
+      //  "parser":"firewall",
+      //  "output":"fw-pubsub"
+      //},
+      {
+        "input":"firewall-vast12",
+        "parser":"firewall",
+        "output":"fw-store"
+      }
+    ]
+
+    var redis  = require("redis")
+    var redisOpts = {} //redis module also uses blank opts.
+    var client = redis.createClient(opts.outputConfig['fw-store'].serverPort, opts.outputConfig['fw-store'].serverAddress, redisOpts)
+
+    client.on('ready', function(){
+      client.flushall( function (err) { 
+        assert(!err)
+        var instance = new core.LogTool(opts)
+
+        var check = function(){ 
+          client.keys("logtool:events:firewall:*", function (err, replies) {
+            assert(!err)
+            //console.log('got ' + replies.length)
+            assert(replies.length === 8)
+            client.get("logtool:events:firewall:5", function(err, reply){
+              assert(!err)
+              assert(reply === "{\"timestamp\":1333732844000,\"priority\":\"Info\",\"operation\":\"Teardown\",\"messageCode\":\"ASA-6-302014\",\"protocol\":\"TCP\",\"sourceIP\":\"172.23.0.132\",\"destIP\":\"10.32.0.100\",\"sourceHostname\":\"(empty)\",\"destHostname\":\"(empty)\",\"sourcePort\":\"4257\",\"destPort\":\"80\",\"destService\":\"http\",\"direction\":\"outbound\",\"connectionsBuilt\":\"0\",\"connectionsTornDown\":\"1\"}")
               done()
             })
           })

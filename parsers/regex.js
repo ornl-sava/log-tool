@@ -22,6 +22,13 @@ function RegexStream (regexConfig) {
   this.writable = true
   this.readable = true
 
+  this.hasTimestamp = false
+  if(regexConfig && regexConfig.fields && regexConfig.fields.timestamp) this.hasTimestamp = true
+  this.startTime = 0
+  if(regexConfig && regexConfig.startTime) this.startTime = regexConfig.startTime
+  this.endTime = Number.MAX_VALUE 
+  if(regexConfig && regexConfig.endTime) this.endTime = regexConfig.endTime
+
   this._paused = this._ended = this._destroyed = false
 
   this._buffer = ''
@@ -95,7 +102,12 @@ RegexStream.prototype.write = function (data) {
         if ( this._hasRegex ) {
           var result = this._parseString(lines[i])
           //console.log( 'got a result of: ' + JSON.stringify(result))
-          this.emit('data', result)
+          if( ! this.hasTimestamp ){
+            this.emit('data', result)
+          }else{
+            if( this.startTime < (result.timestamp/1000) && (result.timestamp/1000) < this.endTime )
+              this.emit('data', result)
+          }
         }else{
           // just emit the original data
           this.emit('data', lines[i])
