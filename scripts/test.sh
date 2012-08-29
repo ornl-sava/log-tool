@@ -40,6 +40,10 @@ node logSlicer.js -i ./test/data/firewall-vast12-1m.csv -o ./out.txt -p firewall
 b=`cat out.txt | wc -l`
 node logSlicer.js -i ./test/data/firewall-vast12-1m.csv -o ./out.txt -p firewall -e 1333732851
 c=`cat out.txt | wc -l`
+if [ $a -eq 0 ]
+  then
+    echo "logSlicer test failed!"
+fi
 if [ $a -ne $((b+c)) ]
   then
     echo "logSlicer test failed!"
