@@ -17,13 +17,13 @@ All of the following are json files located in the `config` directory.
 
 ### Application Configuration
 
-The file `config.json` handles any configuration options for the application overall, such as how verbose its logging should be.
+The file `global.json` handles any configuration options for the application overall, such as error logging and verbosity.
 
 The default is to use the `development` environment, so in production, simply change the `environment` setting at the top of the file:
 
     "environment": "production"
 
-Configuration options in `development` are inherited by `production`, but you can override them in the `production` block.
+The remaining options will be stored in the item of that name ("development", "production", etc.)  These environment/object names can be arbitrary.
 
 ### Input Configuration
 
