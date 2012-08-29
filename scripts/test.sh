@@ -35,6 +35,16 @@ cat in.txt > temp.in.txt
 sleep 1
 diff in.txt out.txt
 
+a=`cat ./test/data/firewall-vast12-1m.csv | wc -l`
+node logSlicer.js -i ./test/data/firewall-vast12-1m.csv -o ./out.txt -p firewall -s 1333732850
+b=`cat out.txt | wc -l`
+node logSlicer.js -i ./test/data/firewall-vast12-1m.csv -o ./out.txt -p firewall -e 1333732851
+c=`cat out.txt | wc -l`
+if [ $a -ne $((b+c)) ]
+  then
+    echo "logSlicer test failed!"
+fi
+
 echo 'done!'
 echo ''
 

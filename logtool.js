@@ -105,6 +105,6 @@ user = opts.get('user') || "";
 //var instance = new core.LogTool(opts)
 var instance = new core.LogTool()
 
-instance.on('done', process.exit) //TODO best way to do this?  How come it sometime exists without needing this (eg. for file streams)?
+instance.on('done', process.exit)
 
 //instance.stop()

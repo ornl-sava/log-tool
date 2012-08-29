@@ -12,7 +12,7 @@ opts.inputConfig = {
   "watch":{
     "module":"file-watch",
     "fileName":"temp.in.txt",
-    "timeout": 3000,
+    "timeout": 1900,
     "interval": 100,
     "encoding":"utf-8"
   }
