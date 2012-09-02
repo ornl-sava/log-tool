@@ -22,12 +22,21 @@ function RegexStream (regexConfig) {
   this.writable = true
   this.readable = true
 
+  this.relativeTime = false
+  if(regexConfig && regexConfig.relativeTime && regexConfig.relativeTime === true)
+    this.relativeTime = true
+
   this.hasTimestamp = false
-  if(regexConfig && regexConfig.fields && regexConfig.fields.timestamp) this.hasTimestamp = true
+  if(regexConfig && regexConfig.fields && regexConfig.fields.timestamp)
+    this.hasTimestamp = true
+
   this.startTime = 0
-  if(regexConfig && regexConfig.startTime) this.startTime = regexConfig.startTime
+  if(regexConfig && regexConfig.startTime) 
+    this.startTime = regexConfig.startTime
+
   this.endTime = Number.MAX_VALUE 
-  if(regexConfig && regexConfig.endTime) this.endTime = regexConfig.endTime
+  if(regexConfig && regexConfig.endTime) 
+    this.endTime = regexConfig.endTime
 
   this._paused = this._ended = this._destroyed = false
 
@@ -94,6 +103,20 @@ RegexStream.prototype.write = function (data) {
   //always save the last item.  the end method will always give us a final newline to flush this out.
   this._buffer = lines.pop()
 
+  var self = this
+  var emitDelayed = function(msg){
+    var delay = msg.timestamp - (self.startTime*1000)
+    //console.log('delay of ' + delay)
+    setTimeout( function(){
+        if(! self._ended){
+          //console.log('emitting')
+          self.emit('data', msg)
+        }else{
+          //console.log('not emitting, ended already')
+        }
+      }, delay )
+  }
+
   // loop through each all of the lines and parse
   for ( var i = 0 ; i < lines.length ; i++ ) {
     if(lines[i] !== ""){
@@ -105,8 +128,13 @@ RegexStream.prototype.write = function (data) {
           if( ! this.hasTimestamp ){
             this.emit('data', result)
           }else{
-            if( this.startTime < (result.timestamp/1000) && (result.timestamp/1000) < this.endTime )
-              this.emit('data', result)
+            if( this.startTime < (result.timestamp/1000) && (result.timestamp/1000) < this.endTime ){
+              if(this.relativeTime){
+                emitDelayed(result)
+              }else{
+                this.emit('data', result)
+              }
+            }
           }
         }else{
           // just emit the original data

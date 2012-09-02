@@ -248,6 +248,7 @@ suite("Integration Tests",function(){
       , "delimiter": "\r\n|\n"
       , "startTime":0
       , "endTime":2147483648 //The upper limit of 2147483648 doesn't really apply to javascript numbers, just convenient to use.
+      , "relativeTime":false
       },
       "line-regex":{
         "module":"regex"
@@ -302,8 +303,10 @@ suite("Integration Tests",function(){
     var opts = {}
     opts.inputConfig = {
       "firewall-vast12":{
-        "module":"file",
+        "module":"file-watch",
         "fileName":"test/data/firewall-vast12-1m.csv",
+        "timeout": 1100,  //using this timeout so that parser can emit its events before it ends
+        "interval": 100,
         "encoding":"utf-8",
         "bufferSize": 1024 *16 // 1024*64 is default.
       }
@@ -336,22 +339,10 @@ suite("Integration Tests",function(){
       , "delimiter": "\r\n|\n"
       , "startTime":1333732843 //this range is totally arbitrary, just wanted a small window not covering the start or end of log entries.
       , "endTime":1333732845 
-      },
-      "line-regex":{
-        "module":"regex"
-      , "regex": "^([^,]+).*"
-      , "labels": ["line"]
-      , "fields": {  }
-      , "delimiter": "\r\n|\n"
-      , "startTime":0
+      , "relativeTime":true
       }
     }
     opts.connectionConfig = [
-      //{
-      //  "input":"firewall-vast12",
-      //  "parser":"firewall",
-      //  "output":"fw-pubsub"
-      //},
       {
         "input":"firewall-vast12",
         "parser":"firewall",

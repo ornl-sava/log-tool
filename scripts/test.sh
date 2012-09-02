@@ -49,6 +49,23 @@ if [ $a -ne $((b+c)) ]
     echo "logSlicer test failed!"
 fi
 
+rm out.txt
+touch out.txt
+node logEmitter.js -i ./test/data/firewall-vast12-1m.csv -o ./out.txt -p firewall -s 1333732850 -e 1333732852 &
+d=`cat out.txt | wc -l`
+#echo $d
+if [ $d -ne 0 ]
+  then
+    echo "logEmitter test failed! (emitted too much / too fast)"
+fi
+sleep 2
+e=`cat out.txt | wc -l`
+#echo $e
+if [ $e -ne 10 ]
+  then
+    echo "logEmitter test failed! (emitted too little / too slow)"
+fi
+
 echo 'done!'
 echo ''
 

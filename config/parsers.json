@@ -24,6 +24,7 @@
   , "delimiter": "\r\n|\n"
   , "startTime":0
   , "endTime":2147483648
+  , "relativeTime":false
   },
   "snort":{
     "module":"regex"
@@ -33,5 +34,6 @@
   , "fields": { "timestamp": {"regex": "MM/DD-HH:mm:ss.SSS", "type": "moment"} }
   , "startTime":0
   , "endTime":2147483648
+  , "relativeTime":false
   }
 }
