@@ -29,12 +29,11 @@
     , "bin": "./bin"
     }
   , "main": "./logtool.js"
-  , "bin": "./bin/core.js"
   , "scripts": {
-      "start": "./scripts/start.sh"
-    , "stop": "./scripts/stop.sh"
-    , "restart": "./scripts/stop.sh; ./scripts/start.sh"
-    , "test": "./scripts/test.sh"
+      "start": "./bin/start.sh"
+    , "stop": "./bin/stop.sh"
+    , "restart": "./bin/stop.sh; ./bin/start.sh"
+    , "test": "./bin/test.sh"
     }
   , "dependencies": {
       "async": ">0.1"
