@@ -1,12 +1,12 @@
 [
   {
     "logName"     : "snort"
-  , "logFilePath" : "test/tempData/ids-vast12"
+  , "logFilePath" : "test/data/ids-vast12"
   , "logParser"   : "snort.json"
   }
 , {
     "logName"     : "firewall"
-  , "logFilePath" : "test/tempData/firewall-slice2.csv"
+  , "logFilePath" : "test/tempData/firewall-slice.csv"
   , "logParser"   : "firewall.json"
   }
 ]
