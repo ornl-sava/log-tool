@@ -18,6 +18,15 @@ echo 'done with jshint!'
 echo ''
 
 echo 'running console input/output tests ...'
+
+echo 'this is a test' > in.txt
+echo 'i am testing some things' >> in.txt
+echo 'some text in a file' >> in.txt
+echo 'very exciting stuff' >> in.txt
+echo 'blah blah blah blah blah blah' >> in.txt
+echo 'stuff stuff stuff stuff' >> in.txt
+echo 'best test ever' >> in.txt
+
 echo '' > out.txt
 cat in.txt | node ./test/stdinTest.js
 diff in.txt out.txt
@@ -73,4 +82,5 @@ echo 'running mocha tests ...'
 mocha -u tdd -R spec -t 10000 ./test/mocha-tests.js
 
 rm ./out.txt
+rm ./in.txt
 rm ./temp.in.txt
