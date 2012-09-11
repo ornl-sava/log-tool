@@ -227,9 +227,16 @@ RegexStream.prototype.end = function (str) {
 
   //since we're done, presumably this is a single, complete item remaining in the buffer, so handle it.
   if(this._buffer !== ""){
-    var result = this._parseString(this._buffer)
-    this._buffer = ''
-    this.emit('data', result)
+    try {
+      var result = this._parseString(this._buffer)
+      this._buffer = ''
+      this.emit('data', result)
+    }catch (err){
+      //console.log('some error emitted for some reason: ' + err)
+      this._buffer = ''
+      var error = new Error('asdf RegexStream: parsing error - ' + err)
+      this.emit('error', error)
+    }
   }
 
   this._ended = true

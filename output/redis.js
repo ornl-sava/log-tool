@@ -84,12 +84,12 @@ RedisStream.prototype.end = function (str) {
   
   if ( ! this.writable ) return
   
+  if ( arguments.length )
+    this.write(str)
+  
   this._ended = true
   this.readable = false
   this.writable = false
-  
-  if ( arguments.length )
-    this.write(str)
 
   this.emit('end')
   this.emit('close')
