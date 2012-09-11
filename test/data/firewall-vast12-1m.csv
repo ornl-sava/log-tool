@@ -1,4 +1,4 @@
-z06/Apr/2012 17:20:00,Info,Built,ASA-6-302013,TCP,172.23.27.50,10.32.0.100,(empty),(empty),4348,80,http,outbound,1,0
+06/Apr/2012 17:20:00,Info,Built,ASA-6-302013,TCP,172.23.27.50,10.32.0.100,(empty),(empty),4348,80,http,outbound,1,0
 06/Apr/2012 17:20:00,Info,Teardown,ASA-6-302014,TCP,172.23.27.50,10.32.0.100,(empty),(empty),4348,80,http,outbound,0,1
 06/Apr/2012 17:20:00,Info,Built,ASA-6-302013,TCP,172.23.238.76,10.32.5.54,(empty),(empty),48494,80,http,outbound,1,0
 06/Apr/2012 17:20:00,Info,Teardown,ASA-6-302014,TCP,172.23.238.76,10.32.5.54,(empty),(empty),48494,80,http,outbound,0,1
