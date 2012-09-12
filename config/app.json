@@ -6,7 +6,7 @@
       "useConsole"      : true,
       "consoleOpts"     : { "level" : "warning", "colorize" : true },
       "useFile"         : true,
-      "fileOpts"        : { "level" : "debug", "filename" : "./error.log" }
+      "fileOpts"        : { "level" : "debug", "filename" : "./error.log", "fileFlushDelay" : 1500 }
     }
   },
 
