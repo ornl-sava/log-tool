@@ -2,7 +2,7 @@
 
 `log-tool` is a utility that can read, parse, and write data from log files and similar data sources.  It has a simple modular architecture, consisting of "input modules" to read the data, "parser modules" to format the data as needed, and "output modules" that send this data to some destination.  Each of these modules is stream based, and the configuration of these modules and the connections between them is specified in several simple configuration files.  This project includes several modules of each of these types, and the modular architecture is intended to make it easy to develop additional modules as needed.  All modules are mutually-compatible, and all of them receive their configuration options in the same way (described below.)
 
-![Logtool](arch.png "Overview of Logtool architecture")
+![Logtool](docs/arch.png "Overview of Logtool architecture")
 
 ## Usage Summary
 
