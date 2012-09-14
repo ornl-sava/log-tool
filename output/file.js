@@ -1,8 +1,19 @@
 'use strict';
 module.exports = FileOutStream
 
+//available options: 
+//    opts.filename  //path of file to open.
+//
+//      other options will be passed to createWriteStream, see:
+//        http://nodejs.org/api/fs.html#fs_fs_createwritestream_path_options
+//        createWriteStream default values (as of node 0.8.9) are: 
+//          { flags: 'w',
+//            encoding: null,
+//            mode: 0666,
+//          }
+
+//this will be invoked like a constructor, but really returns the reference below.
 function FileOutStream(opts){
-  //fake constructor
   var fstream = require('fs').createWriteStream('./'+opts.fileName, {encoding:'utf-8'})
 
   fstream.oldwrite = fstream.write

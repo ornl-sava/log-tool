@@ -1,4 +1,12 @@
 {
+  "predef": [
+    "process",
+    "console",
+    "require",
+    "module",
+    "suite",
+    "test"
+  ],
   "node": true,
   "laxcomma": true,
   "indent": 2, 

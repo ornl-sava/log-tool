@@ -1,9 +1,7 @@
-/*global module:true, require:true, console:true, process:true */
-
 /*
   This module will transform a string into JSON string
   It will input a stream, parse it according to a 
-  regular expression and output to a stream
+  regular expression and output the resulting object to a stream
 */
 
 'use strict';
@@ -14,7 +12,17 @@ var Stream = require('stream').Stream
 
 module.exports = RegexStream
 
-//actual RegexStream constructor
+//RegexStream constructor available options: 
+//  regexConfig.relativeTime        //if true, will output the results in 'relative time', meaning with a delay of the entry's timestamp minus the startTime argument below.
+//  regexConfig.startTime           //will ignore entries before this time.  specified in seconds, unix-style
+//  regexConfig.endTime             //will ignore entries after this time.  specified in seconds, unix-style
+//  regexConfig.regex               //regex to use when parsing
+//  regexConfig.labels              //list of names, for each field found with above
+//  regexConfig.delimiter           //regex used to find divisions between log entries
+//  regexConfig.fields              //object containing info on 'special' fields
+//  regexConfig.fields.timestamp    //currently the only implemented 'special' field. contains the regex for how to parse the timestamp.
+//  regexConfig.fields.timestamp.regex    //contains the regex mentioned above, eg. "DD/MMM/YYYY HH:mm:ss"
+//  regexConfig.fields.timestamp.type     //the type of timestamp, currently only "moment" is defined.
 function RegexStream (regexConfig) {
   
   this._appName = require('../package').name

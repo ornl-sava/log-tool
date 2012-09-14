@@ -22,6 +22,16 @@ var readableStreamSpec = exports.readableStreamSpec = function (stream) {
     //TODO look into above issue further ...
 }
 
+//TODO is process.stdin really not pausable? Look into this further ...
+var readableStreamSpecUnpausable = exports.readableStreamSpecUnpausable = function (stream) {
+  var s = spec(stream, {end: false, strict: true}).readable()
+  
+  stream.destroy()
+  //s.validate()
+  //s.validateOnExit()
+    //TODO look into above issue further ...
+}
+
 var throughStreamSpec = exports.throughStreamSpec = function (stream) {
   var s = spec(stream).through({strict: true})
 

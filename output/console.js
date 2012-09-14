@@ -1,6 +1,9 @@
 'use strict';
 module.exports = ConsoleStream
 
+//common options: NA
+
+//this will be invoked like a constructor, but really returns the reference below.
 function ConsoleStream(opts){
   //fake constructor
   var ostream = process.stdout

@@ -1,4 +1,3 @@
-/*global suite:false, test:false*/
 'use strict';
 
 var streamTests = require('../stream-tests-common.js')
@@ -8,7 +7,7 @@ suite("Stream Specification Tests: console.js",function(){
     var opts = {}
     var InputModule = require('../../input/console.js')
     var currInput = new InputModule(opts)
-    streamTests.readableStreamSpec(currInput)
+    streamTests.readableStreamSpecUnpausable(currInput) //TODO is process.stdin not pausable?
   })
 })
 

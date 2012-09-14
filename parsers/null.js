@@ -1,7 +1,5 @@
-/*global module:true, require:true, console:true, process:true */
-
 /*
-  This module does nothing but pass events through.
+  This module does nothing but pass events through without any modification to their contents.
 */
 
 'use strict';
@@ -11,7 +9,8 @@ var Stream = require('stream').Stream
 
 module.exports = NullThroughStream
 
-//actual NullThroughStream constructor
+//NullThroughStream constructor available options: 
+//  (none)
 function NullThroughStream (opts) {
   this.writable = true
   this.readable = true
