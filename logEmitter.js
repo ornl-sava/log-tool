@@ -18,7 +18,7 @@ optsObj.appConfig = {
       "useConsole"      : true,
       "consoleOpts"     : { "level" : "warning", "colorize" : true },
       "useFile"         : true,
-      "fileOpts"        : { "level" : "debug", "filename" : "./logSlicer.log" }
+      "fileOpts"        : { "level" : "debug", "filename" : "./log/logEmitter.log", "fileFlushDelay" : 1500  }
     }
   }
 }

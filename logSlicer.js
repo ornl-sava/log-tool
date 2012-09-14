@@ -18,7 +18,7 @@ optsObj.appConfig = {
       "useConsole"      : true,
       "consoleOpts"     : { "level" : "warning", "colorize" : true },
       "useFile"         : true,
-      "fileOpts"        : { "level" : "debug", "filename" : "./logSlicer.log" }
+      "fileOpts"        : { "level" : "debug", "filename" : "./log/logSlicer.log", "fileFlushDelay" : 1500  }
     }
   }
 }
@@ -47,6 +47,7 @@ optsObj.parserConfig = {
   , "delimiter": "\r\n|\n"
   , "startTime":0
   , "endTime":2147483648
+  , "relativeTime":false
   },
   "snort":{
     "module":"regex"
@@ -56,6 +57,7 @@ optsObj.parserConfig = {
   , "fields": { "timestamp": {"regex": "MM/DD-HH:mm:ss.SSS", "type": "moment"} }
   , "startTime":0
   , "endTime":2147483648
+  , "relativeTime":false
   }
 }
 optsObj.connectionConfig = [

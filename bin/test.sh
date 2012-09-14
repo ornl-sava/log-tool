@@ -51,11 +51,14 @@ node logSlicer.js -i ./test/data/firewall-vast12-1m.csv -o ./out.txt -p firewall
 c=`cat out.txt | wc -l`
 if [ $a -eq 0 ]
   then
-    echo "logSlicer test failed!"
+    echo "logSlicer test failed! (a == 0)"
 fi
 if [ $a -ne $((b+c)) ]
   then
     echo "logSlicer test failed!"
+    echo $a
+    echo $b
+    echo $c
 fi
 
 rm out.txt
@@ -84,3 +87,5 @@ mocha -u tdd -R spec -t 10000 ./test/mocha-tests.js
 rm ./out.txt
 rm ./in.txt
 rm ./temp.in.txt
+touch ./out.fw.txt #I think one of the mocha tests makes this file.
+rm ./out.fw.txt
