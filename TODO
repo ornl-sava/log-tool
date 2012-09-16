@@ -17,6 +17,7 @@ splitting test cases in a sane way
 
 Issues in related modules:
 demo-webserver subscribing to redis pubsub events is somewhat contrary to design - better to send events to client from a logtool output module.
+Should demo app also read from config files? (to learn channel names, etc.)
 look into empty-line-buffering in regex module (eg. when gaps between complete parsable chunks.)
 
 
@@ -34,10 +35,9 @@ spawn a child process for each connection triplet.
 re-implement some of the tests in test.sh as mocha tests?
 
 
-Future:
+Possible Features / modules:
 BinaryJS module
 websockets module
 JSON streams
 watch a dir / input-stream for all files in dir
 CLI tool to edit config files?
-Demo app also reads from config files? (to learn channel names, etc.)
