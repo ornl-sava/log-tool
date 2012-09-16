@@ -1,5 +1,3 @@
-/*global module:true, require:true, console:true, process:true */
-
 /*
   This module will transform a string into JSON string
   It will input a stream, parse it according to a 
@@ -18,7 +16,13 @@ var verbose = false //TODO meh.
 
 module.exports = RedisStream
 
-//actual RedisStream constructor, which does all actual work
+//RedisStream constructor available options: 
+//  opts.keyPrefix      //all keys will be of the form keyPrefix:counter
+//  opts.index          //if true, will index all results with reds.  Note that this can slow output somewhat.  see https://github.com/visionmedia/reds
+//  opts.indexedFields  //if above is true, these fields will be indexed
+//  opts.serverAddress  //address of redis server
+//  opts.serverPort     //port of redis server
+//  opts.redisOpts      //see https://github.com/mranney/node_redis#rediscreateclientport-host-options for options.
 function RedisStream (opts) {
   this.writable = true
   this.readable = true
@@ -33,7 +37,8 @@ function RedisStream (opts) {
   this.keyPrefix = opts.keyPrefix
   this.index = opts.index
   this.indexedFields = opts.indexedFields
-  var redisOpts = {}//see https://github.com/mranney/node_redis#rediscreateclientport-host-options for options.
+  var redisOpts = {}
+  if(opts.redisOpts) redisOpts = opts.redisOpts
 
   this.redisClient = redis.createClient(opts.serverPort, opts.serverAddress, redisOpts)
 

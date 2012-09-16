@@ -1,4 +1,3 @@
-/*global suite:false, test:false*/
 'use strict';
 
 var streamTests = require('../stream-tests-common.js')

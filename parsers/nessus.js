@@ -1,8 +1,5 @@
-/*global module:true, require:true, console:true, process:true */
-
 /*
   This module parses nessus results
-  NB: the file will contain many literal "\n"s, so must pass this only complete lines
 */
 
 'use strict';
@@ -14,7 +11,8 @@ var NullThroughStream = require('./null.js').NullThroughStream
 
 module.exports = NessusStream
 
-//actual NessusStream constructor
+//NessusStream constructor available options: 
+//  (none)
 function NessusStream (opts) {
   this.writable = true
   this.readable = true
@@ -24,12 +22,10 @@ function NessusStream (opts) {
   this._buffer = ''
 
   Stream.call(this)
-  //NullThroughStream.call(this)
   
   return this
 }
 
-//util.inherits(NessusStream, NullThroughStream)
 util.inherits(NessusStream, Stream)
 
 // assumes UTF-8

@@ -1,4 +1,3 @@
-/*global suite:true, test:true */
 "use strict";
 
 var assert = require('chai').assert; //like node's assert, but better.
