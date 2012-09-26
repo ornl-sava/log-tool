@@ -1,23 +1,8 @@
 [
   {
-    "input":"nessus-example",
-    "parser":"nessus",
-    "output":"nessus-pubsub"
-  },
-  {
-    "input":"nessus-example",
-    "parser":"nessus",
-    "output":"nessus-store"
-  },
-  {
     "input":"firewall-vast12",
     "parser":"firewall",
     "output":"fw-pubsub"
-  },
-  {
-    "input":"firewall-vast12",
-    "parser":"firewall",
-    "output":"fw-store"
   },
   {
     "input":"ids-vast12",
@@ -25,8 +10,13 @@
     "output":"ids-pubsub"
   },
   {
+    "input":"firewall-vast12",
+    "parser":"firewall",
+    "output":"fw.out.txt"
+  },
+  {
     "input":"ids-vast12",
     "parser":"snort",
-    "output":"ids-store"
+    "output":"ids.out.txt"
   }
 ]

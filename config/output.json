@@ -36,23 +36,23 @@
   },
   "fw-pubsub": {
     "module"        : "redis-pubsub",
-    "serverAddress" : "127.0.0.1",
-    "serverPort"    : 6379,
-    "channel"       : "events.firewall"
+    "serverAddress" : "160.91.76.124",
+    "serverPort"    : 6380,
+    "channel"       : "fw"
   },
   "fw-store": {
     "module"        : "redis",
-    "serverAddress" : "127.0.0.1",
-    "serverPort"    : 6379,
+    "serverAddress" : "160.91.76.124",
+    "serverPort"    : 6380,
     "keyPrefix"     : "logtool:events:firewall",
     "index"         : true,
     "indexedFields" : ["direction", "operation", "priority", "protocol", "sourceIP", "destIP", "sourcePort", "destPort"]
   },
   "ids-pubsub": {
     "module"        : "redis-pubsub",
-    "serverAddress" : "127.0.0.1",
-    "serverPort"    : 6379,
-    "channel"       : "events.ids"
+    "serverAddress" : "160.91.76.124",
+    "serverPort"    : 6380,
+    "channel"       : "ids"
   },
   "ids-store": {
     "module"        : "redis",
