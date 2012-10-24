@@ -17,13 +17,15 @@ All of the following are json files located in the `config` directory.
 
 ### Application Configuration
 
-The file `global.json` handles any configuration options for the application overall, such as error logging and verbosity.
+The file `app.json` handles any configuration options for the application overall, such as error logging and verbosity, and recoginzing input/output/parser modules.
 
 The default is to use the `development` environment, so in production, simply change the `environment` setting at the top of the file:
 
     "environment": "production"
 
 The remaining options will be stored in the item of that name ("development", "production", etc.)  These environment/object names can be arbitrary.
+
+To recognize and use modules that are external to the main project, their names must be listed in the inputModules, parserModules, or outputModules lists, as appropriate.  If modules are listed here, they will be loaded from the `node_modules` directory, otherwise they will be loaded from the `input` `output` or `parsers` directories.
 
 ### Input Configuration
 

@@ -8,5 +8,5 @@ output.json - keeps track of named output sources.
 
 connections.json - keeps track of which combinations of input/parser/output names to actually use
 
-All files can be modified manually as needed. input.json, output.json, and connections.json can either be modified manually, or can be modified by the logtool program when input/output sources are added via arguments, eg. logtool add output firewall-main file /path/to/file. See logtool --help for further explination on adding/removing named input/output sources.
+All files should be modified manually as needed; these files will not be written to or otherwise modified.
 

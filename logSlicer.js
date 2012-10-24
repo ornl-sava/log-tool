@@ -12,6 +12,7 @@ var core = require('./lib/core.js')
 var optsObj = {}
 
 optsObj.appConfig = {
+  "parserModules"     : ["regex-stream"],
   "environment": "logSlicer",
   "logSlicer": {
     "logOpts": {
@@ -37,7 +38,7 @@ optsObj.outputConfig = {
 }
 optsObj.parserConfig = {
   "firewall":{
-    "module":"regex"
+    "module":"regex-stream"
   , "regex": "^([^,]*),([^,]*),([^,]+),([^,]+),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)"
   , "labels": ["timestamp", "priority", "operation", "messageCode", 
                 "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
@@ -50,7 +51,7 @@ optsObj.parserConfig = {
   , "relativeTime":false
   },
   "snort":{
-    "module":"regex"
+    "module":"regex-stream"
   , "regex": "^(Line Number: \\d+){0,1},{0,1}\\[\\*\\*\\] \\[([0-9:]+)\\] ([\\S\\s]*) \\[\\*\\*\\]\\s*[\r\n|\r|\n](\\[Classification: ){0,1}([\\S\\s]*){0,1}?\\]{0,1} {0,1}\\[Priority: (\\d+)\\]\\s*[\r\n|\r|\n](\\d{2}\\/\\d{2}\\-\\d{2}:\\d{2}:\\d{2}\\.\\d{3})\\d{3} ([\\d\\.]+):{0,1}(\\d+){0,1} \\-> ([\\d\\.]+):{0,1}(\\d+){0,1}\\s*[\r\n|\r|\n]([\\s\\S]+)"
   , "labels": ["lineNumber", "rule", "ruleText", "junkText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"]
   , "delimiter" : "\r\n\r\n|\n\n"

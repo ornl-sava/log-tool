@@ -4,7 +4,9 @@ var assert = require('chai').assert
   , moment = require('moment')
 var streamTests = require('../stream-tests-common.js')
 
-var RegexStream = require('../../parsers/regex.js')
+//this is a special case compared to other tests, because this is now its own npm module.
+//TODO many of these are redundant with the modules own tests - we should remove the redundant tests (and perhaps invoke the module's tests instead?)
+var RegexStream = require('../../node_modules/regex-stream/regex-stream.js') 
 
 suite('Stream Specification Tests: regex.js', function() {
 

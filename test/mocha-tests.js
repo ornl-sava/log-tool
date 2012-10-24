@@ -107,7 +107,7 @@ suite("Integration Tests",function(){
     }
     opts.parserConfig = {
       "line-regex":{
-        "module":"regex"
+        "module":"regex-stream"
       , "regex": "^(.*)"
       , "labels": ["line"]
       , "fields": {  }
@@ -237,7 +237,7 @@ suite("Integration Tests",function(){
     }
     opts.parserConfig = {
       "firewall":{
-        "module":"regex"
+        "module":"regex-stream"
       , "regex": "^([^,]*),([^,]*),([^,]+),([^,]+),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)"
       , "labels": ["timestamp", "priority", "operation", "messageCode", 
                     "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
@@ -250,7 +250,7 @@ suite("Integration Tests",function(){
       , "relativeTime":false
       },
       "line-regex":{
-        "module":"regex"
+        "module":"regex-stream"
       , "regex": "^([^,]+).*"
       , "labels": ["line"]
       , "fields": {  }
@@ -328,7 +328,7 @@ suite("Integration Tests",function(){
     }
     opts.parserConfig = {
       "firewall":{
-        "module":"regex"
+        "module":"regex-stream"
       , "regex": "^([^,]*),([^,]*),([^,]+),([^,]+),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)"
       , "labels": ["timestamp", "priority", "operation", "messageCode", 
                     "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 

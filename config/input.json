@@ -9,12 +9,12 @@
   },
   "firewall-vast12":{
     "module":"file",
-    "fileName":"./testIDS",
+    "fileName":"test/data/firewall-vast12-1m.csv",
     "encoding":"utf-8"
   },
   "ids-vast12":{
     "module":"file",
-    "fileName":"./testFW",
+    "fileName":"test/data/ids-vast12",
     "encoding":"utf-8"
   },
   "nessus-example":{

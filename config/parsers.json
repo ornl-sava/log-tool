@@ -6,7 +6,7 @@
     "module":"nessus"
   },
   "line-regex":{
-    "module":"regex"
+    "module":"regex-stream"
   , "regex": "^(.*)"
   , "labels": ["line"]
   , "fields": {  }
@@ -14,7 +14,7 @@
   , "startTime":0
   },
   "firewall":{
-    "module":"regex"
+    "module":"regex-stream"
   , "regex": "^([^,]*),([^,]*),([^,]+),([^,]+),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)"
   , "labels": ["timestamp", "priority", "operation", "messageCode", 
                 "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
@@ -24,16 +24,16 @@
   , "delimiter": "\r\n|\n"
   , "startTime":0
   , "endTime":2147483648
-  , "relativeTime":true
+  , "relativeTime":false
   },
   "snort":{
-    "module":"regex"
+    "module":"regex-stream"
   , "regex": "^(Line Number: \\d+){0,1},{0,1}\\[\\*\\*\\] \\[([0-9:]+)\\] ([\\S\\s]*) \\[\\*\\*\\]\\s*[\r\n|\r|\n](\\[Classification: ){0,1}([\\S\\s]*){0,1}?\\]{0,1} {0,1}\\[Priority: (\\d+)\\]\\s*[\r\n|\r|\n](\\d{2}\\/\\d{2}\\-\\d{2}:\\d{2}:\\d{2}\\.\\d{3})\\d{3} ([\\d\\.]+):{0,1}(\\d+){0,1} \\-> ([\\d\\.]+):{0,1}(\\d+){0,1}\\s*[\r\n|\r|\n]([\\s\\S]+)"
-  , "labels": ["lineNumber", "messageCode", "ruleText", "junkText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "protocol"]
+  , "labels": ["lineNumber", "rule", "ruleText", "junkText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"]
   , "delimiter" : "\r\n\r\n|\n\n"
   , "fields": { "timestamp": {"regex": "MM/DD-HH:mm:ss.SSS", "type": "moment"} }
   , "startTime":0
   , "endTime":2147483648
-  , "relativeTime":true
+  , "relativeTime":false
   }
 }
