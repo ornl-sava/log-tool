@@ -1,0 +1,25 @@
+{
+  "inputModules"      : [],
+  "parserModules"     : ["regex-stream"],
+  "outputModules"     : [],
+
+  "environment": "development",
+
+  "development": {
+    "logOpts": {
+      "useConsole"      : true,
+      "consoleOpts"     : { "level" : "warning", "colorize" : true },
+      "useFile"         : true,
+      "fileOpts"        : { "level" : "debug", "filename" : "./log/app.log", "fileFlushDelay" : 1500 }
+    }
+  },
+
+  "production": {
+    "logOpts": {
+      "useConsole"      : true,
+      "consoleOpts"     : { "level" : "warning", "colorize" : true },
+      "useFile"         : true,
+      "fileOpts"        : { "level" : "info", "filename" : "./log/error.log" }
+    }
+  }
+}
