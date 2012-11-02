@@ -1,6 +1,6 @@
 {
   "inputModules"      : [],
-  "parserModules"     : ["regex-stream"],
+  "parserModules"     : ["regex-stream", "replay-stream"],
   "outputModules"     : [],
 
   "environment": "development",

@@ -41,7 +41,8 @@
     , "hiredis": ">0.1"
     , "winston": ">0.6"
     , "async": ">=0.1.22"
-    , "regex-stream": "git+https://github.com/ornl-visual-analytics/regex-stream.git"
+    , "regex-stream":  "git+https://github.com/ornl-situ/regex-stream.git"
+    , "replay-stream": "git+https://github.com/ornl-situ/replay-stream.git"
   }
   , "devDependencies": {
       "mocha": ">=0.14"

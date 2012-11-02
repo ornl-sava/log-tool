@@ -12,7 +12,7 @@ var core = require('./lib/core.js')
 var optsObj = {}
 
 optsObj.appConfig = {
-  "parserModules"     : ["regex-stream"],
+  "parserModules"     : ["regex-stream", "replay-stream"],
   "environment": "logSlicer",
   "logSlicer": {
     "logOpts": {
@@ -46,19 +46,36 @@ optsObj.parserConfig = {
               ]
   , "fields": { "timestamp": {"regex": "DD/MMM/YYYY HH:mm:ss", "type": "moment"} }
   , "delimiter": "\r\n|\n"
-  , "startTime":0
-  , "endTime":2147483648
-  , "relativeTime":false
+  },
+  "firewall-slice":{
+    "module"    : "replay-stream"
+  , "startTime" : 0
+  , "endTime"   : 2147483648
+  , "relativeTime"  : false
+  , "timestampName" : "timestamp"
+  , "timestampType" : "moment" 
+  , "timestampFormat" : "DD/MMM/YYYY HH:mm:ss" 
+  , "timestampOutputType" : "epoc" 
+  , "stringifyOutput" : true
   },
   "snort":{
     "module":"regex-stream"
   , "regex": "^(Line Number: \\d+){0,1},{0,1}\\[\\*\\*\\] \\[([0-9:]+)\\] ([\\S\\s]*) \\[\\*\\*\\]\\s*[\r\n|\r|\n](\\[Classification: ){0,1}([\\S\\s]*){0,1}?\\]{0,1} {0,1}\\[Priority: (\\d+)\\]\\s*[\r\n|\r|\n](\\d{2}\\/\\d{2}\\-\\d{2}:\\d{2}:\\d{2}\\.\\d{3})\\d{3} ([\\d\\.]+):{0,1}(\\d+){0,1} \\-> ([\\d\\.]+):{0,1}(\\d+){0,1}\\s*[\r\n|\r|\n]([\\s\\S]+)"
-  , "labels": ["lineNumber", "rule", "ruleText", "junkText", "classification", "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"]
+  , "labels": ["lineNumber", "rule", "ruleText", "junkText", "classification", 
+                "priority", "timestamp", "sourceIP", "sourcePort", "destIP", "destPort", "packetInfo"]
   , "delimiter" : "\r\n\r\n|\n\n"
   , "fields": { "timestamp": {"regex": "MM/DD-HH:mm:ss.SSS", "type": "moment"} }
-  , "startTime":0
-  , "endTime":2147483648
-  , "relativeTime":false
+  },
+  "snort-slice":{
+    "module"    : "replay-stream"
+  , "startTime" : 0
+  , "endTime"   : 2147483648
+  , "relativeTime"  : false
+  , "timestampName" : "timestamp"
+  , "timestampType" : "moment" 
+  , "timestampFormat" : "MM/DD-HH:mm:ss.SSS" 
+  , "timestampOutputType" : "epoc" 
+  , "stringifyOutput" : true
   }
 }
 optsObj.connectionConfig = [
@@ -108,7 +125,13 @@ var options = [
   , description : 'The name of the parser to use.  Current options are "firewall" or "snort"'
   , value       : true
   , callback    : function (value) {
-        if( ! optsObj.parserConfig[value] ) {
+        if (value.toLowerCase() === "firewall") {
+          optsObj.connectionConfig[0].parser = ["firewall", "firewall-slice"]
+        }
+        else if (value.toLowerCase() === "snort") {
+          optsObj.connectionConfig[0].parser = ["snort", "snort-slice"]
+        }
+        else {
             console.log(value + ' is not a valid parser.')
             process.exit(1)
         }
@@ -152,13 +175,11 @@ var parser = opts.get('parser')
 if( !parser || parser === ""){
   console.log("missing argument: parser") //already checked that it was valid above
   haveAllArgs = false
-}else{
-  optsObj.connectionConfig[0].parser = parser
 }
 
 if(haveAllArgs){
-  optsObj.parserConfig[opts.get('parser')].startTime = opts.get('startTime')
-  optsObj.parserConfig[opts.get('parser')].endTime = opts.get('endTime')
+  optsObj.parserConfig[opts.get('parser')+'-slice'].startTime = opts.get('startTime')
+  optsObj.parserConfig[opts.get('parser')+'-slice'].endTime = opts.get('endTime')
   var instance = new core.LogTool(optsObj)
   instance.on('done', process.exit)
 }else{
