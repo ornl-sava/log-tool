@@ -45,9 +45,11 @@ sleep 1
 diff in.txt out.txt
 
 a=`cat ./test/data/firewall-vast12-1m.csv | wc -l`
-node logSlicer.js -i ./test/data/firewall-vast12-1m.csv -o ./out.txt -p firewall -s 1333732850
-b=`cat out.txt | wc -l`
 node logSlicer.js -i ./test/data/firewall-vast12-1m.csv -o ./out.txt -p firewall -e 1333732851
+sleep 1
+b=`cat out.txt | wc -l`
+node logSlicer.js -i ./test/data/firewall-vast12-1m.csv -o ./out.txt -p firewall -s 1333732850
+sleep 1
 c=`cat out.txt | wc -l`
 if [ $a -eq 0 ]
   then

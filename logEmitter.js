@@ -53,12 +53,12 @@ optsObj.parserConfig = {
     "module"    : "replay-stream"
   , "startTime" : 0
   , "endTime"   : 2147483648
-  , "relativeTime"  : false //TODO confirm this setting is desired behavior
+  , "relativeTime"  : true //TODO confirm this setting is desired behavior
   , "timestampName" : "timestamp"
-  , "timestampType" : "moment" 
-  , "timestampFormat" : "DD/MMM/YYYY HH:mm:ss" 
+  , "timestampType" : "epoc-ms"//"moment" 
+  //, "timestampFormat" : "DD/MMM/YYYY HH:mm:ss" 
   , "timestampOutputType" : "epoc" 
-  , "stringifyOutput" : true
+  , "stringifyOutput" : false //file output module will do this
   },
   "snort":{
     "module":"regex-stream"
@@ -72,12 +72,12 @@ optsObj.parserConfig = {
     "module"    : "replay-stream"
   , "startTime" : 0
   , "endTime"   : 2147483648
-  , "relativeTime"  : false //TODO confirm this setting is desired behavior
+  , "relativeTime"  : true //TODO confirm this setting is desired behavior
   , "timestampName" : "timestamp"
-  , "timestampType" : "moment" 
-  , "timestampFormat" : "MM/DD-HH:mm:ss.SSS" 
+  , "timestampType" : "epoc-ms"//"moment" 
+  //, "timestampFormat" : "MM/DD-HH:mm:ss.SSS" 
   , "timestampOutputType" : "epoc" 
-  , "stringifyOutput" : true
+  , "stringifyOutput" : false //file output module will do this
   }
 }
 optsObj.connectionConfig = [
@@ -183,8 +183,10 @@ if( !parser || parser === ""){
 var startTime = opts.get('startTime')
 var endTime = opts.get('endTime')
 if(haveAllArgs){
-  optsObj.parserConfig[opts.get('parser')+'-slice'].startTime = opts.get('startTime')
-  optsObj.parserConfig[opts.get('parser')+'-slice'].endTime = opts.get('endTime')
+  if(opts.get('startTime'))
+    optsObj.parserConfig[parser+'-slice'].startTime = opts.get('startTime')
+  if(opts.get('endTime'))
+    optsObj.parserConfig[parser+'-slice'].endTime = opts.get('endTime')
   optsObj.inputConfig.infile.timeout = (endTime - startTime)*1000 + 50
   var instance = new core.LogTool(optsObj)
   instance.on('done', process.exit)

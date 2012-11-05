@@ -334,20 +334,20 @@ suite("Integration Tests",function(){
                     "protocol", "sourceIP", "destIP", "sourceHostname", "destHostname", "sourcePort", 
                     "destPort", "destService", "direction", "connectionsBuilt", "connectionsTornDown"
                   ]
-      , "fields": { "timestamp": {"regex": "DD/MM/YYYY HH:mm:ss", "type": "moment"} }
+      , "fields": { "timestamp": {"regex": "DD/MMM/YYYY HH:mm:ss", "type": "moment"} }
       , "delimiter": "\r\n|\n"
-      , "stringifyOutput" : true
+      , "stringifyOutput" : false //don't need to for replay-stream
       },
       "firewall-slice":{
         "module"    : "replay-stream"
-      , "startTime":0//1333732843 //this range is totally arbitrary, just wanted a small window not covering the start or end of log entries.
-      , "endTime":1333732845*50000 
+      , "startTime":1333732843 //this range is totally arbitrary, just wanted a small window not covering the start or end of log entries.
+      , "endTime":1333732845//*50000 
       , "relativeTime"  : false
       , "timestampName" : "timestamp"
-      , "timestampType" : "moment" 
-      , "timestampFormat" : "DD/MM/YYYY HH:mm:ss" 
+      , "timestampType" : "epoc-ms"//"moment" 
+      , "timestampFormat" : "DD/MMM/YYYY HH:mm:ss" 
       , "timestampOutputType" : "epoc-ms" 
-      , "stringifyOutput" : true
+      , "stringifyOutput" : false //don't need to for redis output module
       }
     }
     opts.connectionConfig = [
