@@ -15,19 +15,19 @@
     "fileName":"ids.out.txt"
   },
   "misc-pubsub": {
-    "module"        : "redis-pubsub",
+    "module"        : "redis-pubsub-stream",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
     "channel"       : "events.misc"
   },
   "nessus-pubsub": {
-    "module"        : "redis-pubsub",
+    "module"        : "redis-pubsub-stream",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
     "channel"       : "events.nessus"
   },
   "nessus-store": {
-    "module"        : "redis",
+    "module"        : "redis-row-stream",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
     "keyPrefix"     : "logtool:events:nessus",
@@ -35,13 +35,13 @@
     "indexedFields" : ["ip", "port", "vulnid"]
   },
   "fw-pubsub": {
-    "module"        : "redis-pubsub",
+    "module"        : "redis-pubsub-stream",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
     "channel"       : "events.firewall"
   },
   "fw-store": {
-    "module"        : "redis",
+    "module"        : "redis-row-stream",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
     "keyPrefix"     : "logtool:events:firewall",
@@ -49,13 +49,13 @@
     "indexedFields" : ["direction", "operation", "priority", "protocol", "sourceIP", "destIP", "sourcePort", "destPort"]
   },
   "ids-pubsub": {
-    "module"        : "redis-pubsub",
+    "module"        : "redis-pubsub-stream",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
     "channel"       : "events.ids"
   },
   "ids-store": {
-    "module"        : "redis",
+    "module"        : "redis-row-stream",
     "serverAddress" : "127.0.0.1",
     "serverPort"    : 6379,
     "keyPrefix"     : "logtool:events:ids",

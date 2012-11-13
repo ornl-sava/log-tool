@@ -52,13 +52,14 @@ NessusStream.prototype.write = function (data) {
   // loop through each all of the lines and parse
   for ( var i = 0 ; i < lines.length ; i++ ) {
     try {
-      if(lines[i] !== ""){
+      if(lines[i] && lines[i] !== ""){
         var result = this.parseNessusResult(lines[i])
-        this.emit('data', result)
+        if(result)
+          this.emit('data', result)
       }
     }
     catch (err){
-      var error = new Error('Nessus: parsing error - ' + err)
+      var error = new Error('Nessus: parsing error - ' + err + ' encountered with item: ' + lines[i])
       this.emit('error', error)
     }
   }
@@ -72,26 +73,30 @@ NessusStream.prototype.write = function (data) {
  * @return - structure containing the ip, vulnid, vulntype, cvss and port
  */
 NessusStream.prototype.parseNessusResult = function(nessStr){
-    var scoreReg = new RegExp("CVSS Base Score : (\\d+\\.\\d+)");
+  var scoreReg = new RegExp("CVSS Base Score : (\\d+\\.\\d+)");
 
-    var portReg = /\D+ \((\d{1,7})\D+\)/;
-    var splitNess = nessStr.split("|");
-    var ip = splitNess[2];
-    var code = parseFloat(splitNess[4]);
-    var holeNote = splitNess[5];
-    var score;
-    var port;
+  var portReg = /\D+ \((\d{1,7})\D+\)/;
+  var splitNess = nessStr.split("|");
+  var ip = splitNess[2];
+  var code = parseFloat(splitNess[4]);
+  var holeNote = splitNess[5];
+  var score;
+  var port;
+
+  if(splitNess[3] ==='scan_start' || splitNess[3] ==='scan_end')
+    return null; 
+  else{
     if(scoreReg.test(nessStr)){
-        score = parseFloat(scoreReg.exec(nessStr)[1]);
+      score = parseFloat(scoreReg.exec(nessStr)[1]);
     }
     else{
-        score = 0;//1.0;
+      score = 0;//1.0;
     }
     if(portReg.test(nessStr)){
-        port = parseFloat(portReg.exec(nessStr)[1]);
+      port = parseFloat(portReg.exec(nessStr)[1]);
     }
     else{
-        port = 'notes';
+      port = 'notes';
     }
     
     return {"ip": (ip === undefined ? "" : ip),
@@ -100,6 +105,7 @@ NessusStream.prototype.parseNessusResult = function(nessStr){
         "cvss": score,
         "value": 1,
         "port":port};
+  }
 }
 
 /**

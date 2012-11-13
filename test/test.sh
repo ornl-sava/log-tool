@@ -84,7 +84,8 @@ echo 'done!'
 echo ''
 
 echo 'running mocha tests ...'
-mocha -u tdd -R spec -t 10000 ./test/mocha-tests.js
+mocha -u tdd -R spec -t 10000 ./test/mocha-tests.js --globals AggressiveTokenizer,tokenizer,RegexpTokenizer,WordTokenizer,WordPunctTokenizer,TreebankWordTokenizer,\$V,\$M,\$L,\$P #some module leaves these globals around
+
 
 rm ./out.txt
 rm ./in.txt

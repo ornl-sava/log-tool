@@ -1,7 +1,7 @@
 {
   "inputModules"      : [],
   "parserModules"     : ["regex-stream", "replay-stream"],
-  "outputModules"     : [],
+  "outputModules"     : ["redis-row-stream", "redis-pubsub-stream"],
 
   "environment": "development",
 

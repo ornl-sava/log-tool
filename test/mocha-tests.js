@@ -149,13 +149,13 @@ suite("Integration Tests",function(){
     }
     opts.outputConfig = {
       "nessus-pubsub": {
-        "module"        : "redis-pubsub",
+        "module"        : "redis-pubsub-stream",
         "serverAddress" : "127.0.0.1",
         "serverPort"    : 6379,
         "channel"       : "events.nessus"
       },
       "nessus-store": {
-        "module"        : "redis",
+        "module"        : "redis-row-stream",
         "serverAddress" : "127.0.0.1",
         "serverPort"    : 6379,
         "keyPrefix"     : "logtool:events:nessus",
@@ -194,8 +194,8 @@ suite("Integration Tests",function(){
           client.keys("logtool:events:nessus:*", function (err, replies) {
             assert(!err)
             //console.log('got ' + replies.length + ' replies')
-            assert(replies.length === 136)
-            client.get("logtool:events:nessus:102", function(err, reply){
+            assert(replies.length === 134)
+            client.get("logtool:events:nessus:101", function(err, reply){
               assert(!err)
               assert(reply === "{\"ip\":\"172.16.247.129\",\"vulnid\":11219,\"vulntype\":\"note\",\"cvss\":0,\"value\":1,\"port\":3632}")
               done()
@@ -221,13 +221,13 @@ suite("Integration Tests",function(){
     }
     opts.outputConfig = {
       "fw-pubsub": {
-        "module"        : "redis-pubsub",
+        "module"        : "redis-pubsub-stream",
         "serverAddress" : "127.0.0.1",
         "serverPort"    : 6379,
         "channel"       : "events.firewall"
       },
       "fw-store": {
-        "module"        : "redis",
+        "module"        : "redis-row-stream",
         "serverAddress" : "127.0.0.1",
         "serverPort"    : 6379,
         "keyPrefix"     : "logtool:events:firewall",
@@ -312,13 +312,13 @@ suite("Integration Tests",function(){
     }
     opts.outputConfig = {
       "fw-pubsub": {
-        "module"        : "redis-pubsub",
+        "module"        : "redis-pubsub-stream",
         "serverAddress" : "127.0.0.1",
         "serverPort"    : 6379,
         "channel"       : "events.firewall"
       },
       "fw-store": {
-        "module"        : "redis",
+        "module"        : "redis-row-stream",
         "serverAddress" : "127.0.0.1",
         "serverPort"    : 6379,
         "keyPrefix"     : "logtool:events:firewall",
@@ -341,7 +341,7 @@ suite("Integration Tests",function(){
       "firewall-slice":{
         "module"    : "replay-stream"
       , "startTime":1333732843 //this range is totally arbitrary, just wanted a small window not covering the start or end of log entries.
-      , "endTime":1333732845//*50000 
+      , "endTime":1333732845// *50000 
       , "relativeTime"  : false
       , "timestampName" : "timestamp"
       , "timestampType" : "epoc-ms"//"moment" 

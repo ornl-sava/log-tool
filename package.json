@@ -43,6 +43,8 @@
     , "async": ">=0.1.22"
     , "regex-stream":  "git+https://github.com/ornl-situ/regex-stream.git"
     , "replay-stream": "git+https://github.com/ornl-situ/replay-stream.git"
+    , "redis-pubsub-stream":  "git+https://github.com/ornl-situ/redis-pubsub-stream.git"
+    , "redis-row-stream": "git+https://github.com/ornl-situ/redis-row-stream.git"
   }
   , "devDependencies": {
       "mocha": ">=0.14"
