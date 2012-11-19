@@ -33,12 +33,8 @@
     , "test": "./test/test.sh"
     }
   , "dependencies": {
-      "moment": ">1.6"
-    , "opts": ">=1.2.2"
+      "opts": ">=1.2.2"
     , "growing-file": ">=0.1.3"
-    , "redis": ">0.7"
-    , "reds": ">=0.1.4"
-    , "hiredis": ">0.1"
     , "winston": ">0.6"
     , "async": ">=0.1.22"
     , "regex-stream":  "git+https://github.com/ornl-situ/regex-stream.git"
@@ -49,6 +45,7 @@
   , "devDependencies": {
       "mocha": ">=0.14"
     , "chai": ">=0.5"
+    , "redis": "=0.7.2"
     , "stream-spec": ">=0.3"
     , "jshint": ">=0.6"
   }

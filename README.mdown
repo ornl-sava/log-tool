@@ -1,8 +1,16 @@
-d# log-tool
+[![Build Status](https://travis-ci.org/ornl-situ/log-tool.png?branch=master)](https://travis-ci.org/ornl-situ/log-tool)
 
-`log-tool` is a utility that can read, parse, and write data from log files and similar data sources.  It has a simple modular architecture, consisting of "input modules" to read the data, "parser modules" to format the data as needed, and "output modules" that send this data to some destination.  Each of these modules is stream based, and the configuration of these modules and the connections between them is specified in several simple configuration files.  This project includes several modules of each of these types, and the modular architecture is intended to make it easy to develop additional modules as needed.  All modules are mutually-compatible, and all of them receive their configuration options in the same way (described below.)
+# log-tool
 
-![Logtool](docs/arch.png "Overview of Logtool architecture")
+Log-tool is a framework for connecting and processing streams of data.  It has a simple modular architecture, consisting of input streams, output streams, and "parsers".  The "parsers" are both input and output streams, and they (generally) perform some operation on that data that passes through them.  Many of these parsers can be combined in series to perform more complex operations.  (Also note that one "connection" can potentially have several inputs and several outputs operating in parallel, also shown in the diagram below.)
+
+All of these components are based on the Node Stream interface, to keep all components mutually-compatible and to increase code reuse between this and other projects.
+
+![Logtool](https://raw.github.com/ornl-situ/log-tool/master/docs/arch.png "Overview of Logtool architecture")
+
+This project includes the core framework as well as some simple modules of each of these types.  The modular architecture is intended to make it easy to develop additional modules as needed, and several of these additional modules are listed below.  All modules are mutually-compatible, and all of them receive their configuration options in the same way (described below.)
+
+The original purpose of this project was reading, parsing, pre-processing, and outputting log information, but this pattern is general enough that it should be useful in a variety of applications.
 
 ## Usage Summary
 
@@ -23,9 +31,9 @@ The default is to use the `development` environment, so in production, simply ch
 
     "environment": "production"
 
-The remaining options will be stored in the item of that name ("development", "production", etc.)  These environment/object names can be arbitrary.
+The remaining options will be stored in the item of that name ("development", "production", etc.)  These environment/object names can be arbitrary.  These options contain misc. application-wide settings, such as verbosity and location of error logs generated at runtime.
 
-To recognize and use modules that are external to the main project, their names must be listed in the inputModules, parserModules, or outputModules lists, as appropriate.  If modules are listed here, they will be loaded from the `node_modules` directory, otherwise they will be loaded from the `input` `output` or `parsers` directories.
+To recognize and use modules that are external to the main project, their names must be listed in the inputModules, parserModules, or outputModules lists, as appropriate.  If modules are listed here, they will be loaded from the `node_modules` directory.  Otherwise, they will be loaded from the `input` `output` or `parsers` directories of this project.
 
 ### Input Configuration
 
@@ -133,6 +141,18 @@ The first entry will connect `input` to the parser named `null` to the output `d
 
 The second entry will connect `nessus-file` to the parser `nessus` to the output `nessus-store` -- this example will read and parse the specified nessus file, and store each entry in redis.
 
+As mentioned above, these can also consist of arrays, such as:
+
+    [
+      {
+        "input":"firewall-vast12",
+        "parser":["firewall","firewall-slice"],
+        "output":["fw-store","fw-pubsub"]
+      }
+    ]
+
+This example will read from the specified source, send the output through all of the parsers in the specified order, and then output to the specified modules in parallel.
+
 ## Project Organization
 
 logtool.js - launches the main logtool process.
@@ -149,9 +169,26 @@ lib directory - contains all core libraries for logtool (ie. everything except f
 
 All tests can be run with `npm test`  This will run jshint and the mocha tests.
 
-Any module can be tested individually with mocha by passing the location of its tests, such as `mocha -u tdd -R spec ./test/parsers/regex.test.js`
-
 Note that when testing, the main logtool process and all modules take their options directly from an `opts` argument, and do not read or modify the log files above.
 
-## Other Repos
-webapp demo
+## Related Projects
+
+[regex stream](https://github.com/ornl-situ/regex-stream)
+
+[replay stream](https://github.com/ornl-situ/replay-stream)
+
+[redis pubsub stream](https://github.com/ornl-situ/redis-pubsub-stream)
+
+[redis row stream](https://github.com/ornl-situ/redis-row-stream)
+
+# License
+
+log-tool is freely distributable under the terms of the MIT License.
+
+Copyright (c) Michael Iannacone (the "Original Author")
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ 
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS, THE U.S. GOVERNMENT, OR UT-BATTELLE BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

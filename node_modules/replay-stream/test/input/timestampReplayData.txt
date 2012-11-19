@@ -1,0 +1,6 @@
+[
+  {"timestamp" : "2012/07/25 10:00:00+0000", "data" : "First line"},
+  {"timestamp" : "2012/07/25 14:14:14+0000", "data" : "Second line"},
+  {"timestamp" : "2012/07/26 07:00:00+0000", "data" : "Third line"},
+  {"timestamp" : "2012/07/26 07:07:07+0000", "data" : "Fourth line"}
+]

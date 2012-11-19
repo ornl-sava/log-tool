@@ -1,18 +1,13 @@
 Minor issues:
-upper/lower cases in diagram.
 other readmes: misc cleanup
 version number
 main readme: core vs non-core modules.
 main readme: 'webapp', logtool vs log-tool
-list (some/all) related repos in documentation of main repo
 
 
 Packaging:
-NPM-ify the non-core modules (and move their integration tests to their package)
-split demo webapp
-split regex stream
-split redis streams
-splitting test cases in a sane way
+demo webapp?
+split modules test cases?  Might actually be best to leave as-is, similar tests in both
 
 
 Issues in related modules:
@@ -23,15 +18,14 @@ look into empty-line-buffering in regex module (eg. when gaps between complete p
 
 Cleanup & misc:
 Generic stream class(es) which other modules inherit from?
-Bug: Data loss when two streams output to one file
 Bug: ValidateOnExit issue in generic stream tests.
 Bug: console input stream not pausable?
 Bug: fileFlushDelay option also affects if file output stream writes will complete in time.
 Better testing for very large files, better testing of pause/resume/backpressure of modules.
-relative vs absolute paths in file modules / log file location
-does "npm start" hide console output?  Is this a forever thing?
+relative vs absolute paths in file modules / log file location (is this still an issue?)
 normalize paths in a cross-platform way (or remove normalization where not needed)
-spawn a child process for each connection triplet.
+does "npm start" hide console output?  Is this a forever thing?
+spawn a child process for each connection.
 re-implement some of the tests in test.sh as mocha tests?
 
 

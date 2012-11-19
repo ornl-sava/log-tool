@@ -23,6 +23,5 @@ module.exports = FileWatchStream
 //this will be invoked like a constructor, but really returns the reference below.
 function FileWatchStream(opts){
   var GrowingFile = require('growing-file');
-  //fake constructor
   return GrowingFile.open('./'+opts.fileName, opts);
 }
